@@ -6,16 +6,16 @@ const token = import.meta.env.VITE_MAPBOX_API_KEY;
 export const useSearchStore = defineStore("searchStore", {
   state: () => ({
     sessionToken: "",
-    suggestions: [] as any[],
+    suggestions: [],
     selectedCoordinates: { lng: 0, lat: 0 },
     brandSuggestions: [],
     loading: false,
-    error: null as string | null,
+    error: null,
     isSearchOpen: false,
   }),
 
   actions: {
-    async selectSuggestion(suggestion: any) {
+    async selectSuggestion(suggestion) {
       try {
         const encodedMapboxId = encodeURIComponent(suggestion.mapbox_id);
         const retrieveUrl = `https://api.mapbox.com/search/searchbox/v1/retrieve/${encodedMapboxId}?session_token=${this.sessionToken}&access_token=${token}`;
@@ -28,7 +28,7 @@ export const useSearchStore = defineStore("searchStore", {
       }
     },
 
-    async fetchSuggestions(query: string) {
+    async fetchSuggestions(query) {
       if (!query) {
         this.suggestions = [];
         return;
@@ -60,7 +60,7 @@ export const useSearchStore = defineStore("searchStore", {
           this.error = data.message || "Failed to fetch suggestions";
           this.suggestions = [];
         }
-      } catch (err: any) {
+      } catch (err) {
         this.error = err?.message || "Search failed";
         this.suggestions = [];
       } finally {

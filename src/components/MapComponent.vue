@@ -4,21 +4,20 @@
   <div ref="mapContainer" id="map" class="map-container"></div>
 </template>
 
-<script setup lang="ts">
-import { computed, onBeforeMount, onMounted, onUnmounted, ref, watch } from "vue";
+<script setup>
+import { computed, onMounted, ref, watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import { useQuasar } from "quasar";
 import { useSearchStore } from "src/stores/search-store";
 import { useMapStore } from "src/stores/map-store";
 import { useWeatherStore } from "src/stores/weather-store";
-import { set } from "@vueuse/core";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
 const mapStore = useMapStore();
 const weatherStore = useWeatherStore();
 
-let map: any;
+let map;
 const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
 const mapContainer = ref(null);
 const x = ref(0);
@@ -38,12 +37,10 @@ const mapStyles = {
   winter: "mapbox://styles/karinmiriam/cml7yoatg003201s69l3db8kq",
 };
 
-onBeforeMount(async () => {
-  await setMapStyle();
-});
-
 async function setMapStyle() {
   const data = await weatherStore.fetchWeatherData(mapStore.lng, mapStore.lat);
+
+  console.log(data);
 
   if (data.main.temp < 10) {
     map.setStyle(mapStyles.winter);
@@ -55,10 +52,13 @@ async function setMapStyle() {
 onMounted(() => {
   map = new mapboxgl.Map({
     container: "map",
+    style: mapStyles.summer,
     zoom: mapStore.zoom,
     center: [mapStore.lng, mapStore.lat],
     accessToken: apiKey ?? "",
   });
+
+  setMapStyle();
 
   map.on("moveend", async () => {
     mapStore.setCoordinates(map.getCenter().lng, map.getCenter().lat);

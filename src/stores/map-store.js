@@ -9,12 +9,12 @@ export const useMapStore = defineStore("mapStore", {
   }),
   getters: {},
   actions: {
-    setCoordinates(lng: number, lat: number) {
+    setCoordinates(lng, lat) {
       set(this, "lng", lng);
       set(this, "lat", lat);
     },
 
-    setZoom(zoom: number) {
+    setZoom(zoom) {
       set(this, "zoom", zoom);
     },
   },

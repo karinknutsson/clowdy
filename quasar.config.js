@@ -37,12 +37,6 @@ export default defineConfig((/* ctx */) => {
         node: "node20",
       },
 
-      typescript: {
-        strict: true,
-        vueShim: true,
-        // extendTsConfig (tsConfig) {}
-      },
-
       vueRouterMode: "hash", // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
@@ -66,7 +60,6 @@ export default defineConfig((/* ctx */) => {
         [
           "vite-plugin-checker",
           {
-            vueTsc: true,
             // eslint: {
             //   lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
             //   useFlatConfig: true,
@@ -194,7 +187,7 @@ export default defineConfig((/* ctx */) => {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "aether",
+        appId: "nimbus",
       },
     },
 

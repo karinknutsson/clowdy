@@ -44,7 +44,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { computed, ref, watch, nextTick, onMounted } from "vue";
 import { useSearchStore } from "src/stores/search-store";
 import { areCoordinates } from "./is-coordinate";
@@ -56,8 +56,8 @@ const $q = useQuasar();
 const searchStore = useSearchStore();
 const searchTerm = ref("");
 const isSearchFocused = ref(false);
-const searchBarRef = ref<HTMLInputElement | null>(null);
-const searchInputRef = ref<HTMLInputElement | null>(null);
+const searchBarRef = ref(null);
+const searchInputRef = ref(null);
 
 const searchBarBackground = computed(() => {
   return isSearchFocused.value ? "#ffffff" : "rgba(255, 255, 255, 0.7)";
@@ -87,7 +87,7 @@ function clearSearchTerm() {
   onBlurSearch();
 }
 
-function onSelectSuggestion(suggestion: any) {
+function onSelectSuggestion(suggestion) {
   searchStore.selectSuggestion(suggestion);
   searchStore.suggestions = [];
 }

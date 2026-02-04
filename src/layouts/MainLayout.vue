@@ -6,7 +6,7 @@
   </q-layout>
 </template>
 
-<script setup lang="ts">
+<script setup>
 // import { ref } from 'vue'
 </script>
 

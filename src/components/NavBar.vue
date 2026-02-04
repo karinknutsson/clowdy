@@ -57,7 +57,7 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { useQuasar } from "quasar";
 import SearchBar from "./SearchBar.vue";
 import gsap from "gsap";
@@ -70,7 +70,7 @@ const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
 const isAboutPopupOpen = ref(true);
-const aboutPopupRef = ref<HTMLElement | null>(null);
+const aboutPopupRef = ref(null);
 const aboutPopupFullHeight = ref(0);
 
 const aboutPopupFullWidth = computed(() => {
@@ -100,7 +100,7 @@ function hideLogo() {
   });
 }
 
-function showLogo(delay: number) {
+function showLogo(delay) {
   gsap.to(".logo-wrapper", {
     duration: 0.2,
     opacity: 1,
@@ -219,7 +219,7 @@ function handleCloseAboutPopup() {
   });
 }
 
-function setInfoWidth(isDesktop: boolean) {
+function setInfoWidth(isDesktop) {
   gsap.to(".about-popup", {
     duration: 0.2,
     width: aboutPopupFullWidth.value,

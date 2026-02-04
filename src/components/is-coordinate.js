@@ -1,4 +1,4 @@
-export function areCoordinates(input: string) {
+export function areCoordinates(input) {
   const coordRegex = /^\s*(-?\d+(\.\d+)?)[,\s]+(-?\d+(\.\d+)?)\s*$/;
   const match = input.match(coordRegex);
   if (match) {
@@ -8,7 +8,7 @@ export function areCoordinates(input: string) {
   }
 }
 
-export function isCoordinate(input: string) {
+export function isCoordinate(input) {
   const coordRegex = /^\s*(-?\d+(\.\d+)?)/;
   const match = input.match(coordRegex);
   if (match) {

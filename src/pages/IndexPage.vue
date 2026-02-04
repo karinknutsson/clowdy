@@ -8,8 +8,7 @@
   </q-page>
 </template>
 
-<script setup lang="ts">
-import { ref } from "vue";
+<script setup>
 import MapComponent from "src/components/MapComponent.vue";
 import NavBar from "src/components/NavBar.vue";
 </script>

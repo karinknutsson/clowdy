@@ -6,7 +6,7 @@ export const useWeatherStore = defineStore("weatherStore", {
   state: () => ({}),
   getters: {},
   actions: {
-    async fetchWeatherData(lng: number, lat: number) {
+    async fetchWeatherData(lng, lat) {
       try {
         if (!token) return;
 
