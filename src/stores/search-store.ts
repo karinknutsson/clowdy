@@ -16,7 +16,6 @@ export const useSearchStore = defineStore("searchStore", {
 
   actions: {
     async selectSuggestion(suggestion: any) {
-      console.log(suggestion);
       try {
         const encodedMapboxId = encodeURIComponent(suggestion.mapbox_id);
         const retrieveUrl = `https://api.mapbox.com/search/searchbox/v1/retrieve/${encodedMapboxId}?session_token=${this.sessionToken}&access_token=${token}`;

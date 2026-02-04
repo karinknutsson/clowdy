@@ -9,13 +9,13 @@ import { computed, onMounted, onUnmounted, ref, watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import { useQuasar } from "quasar";
 import { useSearchStore } from "src/stores/search-store";
-import gsap from "gsap";
+import { useMapStore } from "src/stores/map-store";
 
 const $q = useQuasar();
 const searchStore = useSearchStore();
+const mapStore = useMapStore();
 
 let map: any;
-let marker: any;
 const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
 const mapContainer = ref(null);
 const x = ref(0);
@@ -35,9 +35,15 @@ onMounted(() => {
     container: "map",
     // purple-cyan-raleway
     style: "mapbox://styles/karinmiriam/cmaqslh9g00r501s90mydcred",
-    zoom: 12,
-    center: [13.407557, 52.509237],
+    zoom: mapStore.zoom,
+    center: [mapStore.lng, mapStore.lat],
     accessToken: apiKey ?? "",
+  });
+
+  map.on("moveend", () => {
+    mapStore.setCoordinates(map.getCenter().lng, map.getCenter().lat);
+    mapStore.setZoom(map.getZoom());
+    console.log(map.getCenter().lng, map.getCenter().lat);
   });
 });
 
@@ -45,6 +51,9 @@ watch(
   () => [searchStore.selectedCoordinates.lng, searchStore.selectedCoordinates.lat],
   ([lng, lat]) => {
     if (lng && lat) {
+      mapStore.setCoordinates(lng, lat);
+      mapStore.setZoom(14);
+
       map.flyTo({
         center: [lng, lat],
         zoom: 14,
