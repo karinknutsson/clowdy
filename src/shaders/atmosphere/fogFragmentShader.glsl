@@ -9,6 +9,6 @@ out vec4 outColor;
 
 void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
-    float fog = smoothstep(0.4, 1.0, uv.y);
-    outColor = vec4(0.8, 0.8, 0.9, fog * uIntensity);
+    float opacity = distance(uv, vec2(0.5)) * 1.5;
+    outColor = vec4(0.6, 0.6, 0.6, opacity);
 }

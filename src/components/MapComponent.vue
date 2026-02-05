@@ -11,8 +11,9 @@ import { useQuasar } from "quasar";
 import { useSearchStore } from "src/stores/search-store";
 import { useMapStore } from "src/stores/map-store";
 import { useWeatherStore } from "src/stores/weather-store";
-import fogVertexShader from "src/shaders/fog/vertexShader.glsl?raw";
-import fogFragmentShader from "src/shaders/fog/fragmentShader.glsl?raw";
+import atmosphereVertexShader from "src/shaders/atmosphere/vertexShader.glsl?raw";
+import fogFragmentShader from "src/shaders/atmosphere/fogFragmentShader.glsl?raw";
+import mistFragmentShader from "src/shaders/atmosphere/mistFragmentShader.glsl?raw";
 import { createProgram, createFullscreenQuad } from "src/utils/shader-helpers";
 
 const $q = useQuasar();
@@ -23,6 +24,8 @@ const weatherStore = useWeatherStore();
 let map;
 const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
 let currentLayerId = null;
+// let currentStyle = null;
+let setStyle = null;
 const x = ref(0);
 const y = ref(0);
 const showOverlay = ref(false);
@@ -46,13 +49,11 @@ const mapStyles = {
 };
 
 function removeLayerIfExists(layerId) {
-  if (map.getLayer(layerId)) map.removeLayer(layerId);
+  if (layerId && map.getLayer(layerId)) map.removeLayer(layerId);
 }
 
 function addShaderLayer(layerId, vertexShader, fragmentShader) {
-  if (currentLayerId === layerId && map.getLayer(layerId)) return;
-
-  if (currentLayerId && currentLayerId !== layerId) removeLayerIfExists(currentLayerId);
+  removeLayerIfExists(currentLayerId);
 
   map.addLayer({
     id: layerId,
@@ -109,29 +110,42 @@ async function setMapStyle() {
 
   console.log(data.weather[0].main);
 
+  let currentStyle;
+
   if (data.main.temp <= 0) {
-    map.setStyle(mapStyles.winter);
+    currentStyle = "winter";
   } else if (data.main.temp > 0 && data.main.temp <= 10) {
-    map.setStyle(mapStyles.autumn);
-  } else if (data.main.temp > 15 && data.main.temp <= 20) {
-    map.setStyle(mapStyles.spring);
+    currentStyle = "autumn";
+  } else if (data.main.temp > 10 && data.main.temp <= 20) {
+    currentStyle = "spring";
   } else if (data.main.temp > 20 && data.main.temp <= 30) {
-    map.setStyle(mapStyles.summer);
+    currentStyle = "summer";
   } else if (data.main.temp > 30 && data.main.temp <= 40) {
-    map.setStyle(mapStyles.tropical);
+    currentStyle = "tropical";
   } else if (data.main.temp > 40) {
-    map.setStyle(mapStyles.desert);
+    currentStyle = "desert";
   }
 
-  map.on("load", async () => {
-    if (
-      data.weather[0].main === "Mist" ||
-      data.weather[0].main === "Fog" ||
-      data.weather[0].main === "Haze"
-    ) {
-      addShaderLayer("fogLayer", fogVertexShader, fogFragmentShader);
+  function setShader() {
+    if (data.weather[0].main === "Fog") {
+      addShaderLayer("fogLayer", atmosphereVertexShader, fogFragmentShader);
+    } else if (data.weather[0].main === "Mist" || data.weather[0].main === "Rain") {
+      addShaderLayer("mistLayer", atmosphereVertexShader, mistFragmentShader);
+    } else {
+      removeLayerIfExists(currentLayerId);
     }
-  });
+  }
+
+  if (currentStyle !== setStyle) {
+    map.setStyle(mapStyles[currentStyle]);
+    setStyle = currentStyle;
+
+    map.on("style.load", () => {
+      setShader();
+    });
+  } else {
+    setShader();
+  }
 }
 
 onMounted(async () => {
@@ -166,6 +180,8 @@ watch(
         zoom: 14,
         essential: true,
       });
+
+      setMapStyle();
     }
   },
 );
