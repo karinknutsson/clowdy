@@ -47,7 +47,7 @@
 <script setup>
 import { computed, ref, watch, nextTick, onMounted } from "vue";
 import { useSearchStore } from "src/stores/search-store";
-import { areCoordinates } from "./is-coordinate";
+import { areCoordinates } from "src/utils/is-coordinate";
 import { useQuasar } from "quasar";
 import { onClickOutside } from "@vueuse/core";
 import gsap from "gsap";
