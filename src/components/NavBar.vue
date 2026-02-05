@@ -8,7 +8,7 @@
       <div :class="$q.screen.gt.sm ? 'logo' : 'logo-mobile'">Nimbus</div>
     </div>
 
-    <div class="about-button-wrapper">
+    <div v-if="!showAboutPopup" class="about-button-wrapper">
       <button
         type="button"
         class="nav-btn"
@@ -21,7 +21,7 @@
     </div>
   </div>
   <div ref="aboutPopupRef" class="about-popup">
-    <template v-if="isAboutPopupOpen">
+    <template v-if="showAboutPopupText">
       <div class="close-wrapper">
         <button type="button" class="close-button flex-center" @click="handleCloseAboutPopup">
           <i class="pi pi-times icon"></i>
@@ -55,7 +55,8 @@ import { onClickOutside } from "@vueuse/core";
 const searchStore = useSearchStore();
 const $q = useQuasar();
 const emit = defineEmits(["openPopup", "closePopup"]);
-const isAboutPopupOpen = ref(true);
+const showAboutPopup = ref(true);
+const showAboutPopupText = ref(false);
 const aboutPopupRef = ref(null);
 const aboutPopupFullHeight = ref(0);
 
@@ -75,7 +76,7 @@ onMounted(async () => {
 });
 
 onClickOutside(aboutPopupRef, () => {
-  if (isAboutPopupOpen.value) handleCloseAboutPopup();
+  if (showAboutPopup.value) handleCloseAboutPopup();
 });
 
 function hideLogo() {
@@ -118,7 +119,11 @@ function handleCloseSearch() {
 
 function handleOpenAboutPopup() {
   setTimeout(() => {
-    isAboutPopupOpen.value = true;
+    showAboutPopup.value = true;
+  }, 300);
+
+  setTimeout(() => {
+    showAboutPopupText.value = true;
   }, 800);
 
   emit("openPopup");
@@ -161,13 +166,18 @@ function handleOpenAboutPopup() {
 }
 
 function handleCloseAboutPopup() {
+  showAboutPopupText.value = false;
+
+  setTimeout(() => {
+    showAboutPopup.value = false;
+  }, 400);
+
   if (aboutPopupRef.value) {
     gsap.set(aboutPopupRef.value, {
       height: aboutPopupFullHeight.value + "px",
     });
   }
 
-  isAboutPopupOpen.value = false;
   emit("closePopup");
 
   if ($q.screen.lt.md) {
@@ -241,7 +251,7 @@ watch(
       handleOpenSearch();
     }
 
-    if (isAboutPopupOpen.value) setInfoWidth(isDesktop);
+    if (showAboutPopup.value) setInfoWidth(isDesktop);
   },
 );
 
@@ -268,7 +278,7 @@ watch(aboutPopupFullHeight, (value) => {
       height,
     });
 
-    isAboutPopupOpen.value = false;
+    showAboutPopup.value = false;
   }
 });
 </script>
@@ -312,7 +322,7 @@ button.mobile {
 }
 
 .navbar-container {
-  z-index: 200000;
+  z-index: 20;
   position: absolute;
   top: 0;
   left: 0;
@@ -350,9 +360,9 @@ button.mobile {
   box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   opacity: 0;
   border-radius: 2px;
-  z-index: 500000;
+  z-index: 19;
   padding: 4px 24px 16px 30px;
-  pointer-events: none;
+  min-height: 56px;
 }
 
 .about-button-wrapper {
@@ -368,6 +378,7 @@ body.screen--xs {
   .about-popup {
     width: v-bind(aboutPopupFullWidth);
     top: 28px;
+    min-height: 44px;
   }
 
   .about-text-wrapper {
