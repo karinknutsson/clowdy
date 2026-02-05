@@ -35,17 +35,32 @@ const overlayStyle = computed(() => {
 });
 
 const mapStyles = {
-  summer: "mapbox://styles/karinmiriam/cml81pacf000l01qz92u546ju",
-  winter: "mapbox://styles/karinmiriam/cml7yoatg003201s69l3db8kq",
+  placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z",
+  winter: "mapbox://styles/karinmiriam/cml9alr3f002501qzdrwabuer",
+  autumn: "mapbox://styles/karinmiriam/cml9fuw9f006c01sj5hqd6ytl",
+  spring: "mapbox://styles/karinmiriam/cml9h8dgz003f01r07i9h60bk",
+  summer: "mapbox://styles/karinmiriam/cml9hill2001801r02ghifgjr",
+  tropical: "mapbox://styles/karinmiriam/cml9hqmkw000t01s7frzh09k3",
+  desert: "mapbox://styles/karinmiriam/cml9hvfca003j01r0d3jjcbkg",
 };
 
 async function setMapStyle() {
   const data = await weatherStore.fetchWeatherData(mapStore.lng, mapStore.lat);
 
-  if (data.main.temp < 0) {
+  console.log(data);
+
+  if (data.main.temp <= 0) {
     map.setStyle(mapStyles.winter);
-  } else {
+  } else if (data.main.temp > 0 && data.main.temp <= 10) {
+    map.setStyle(mapStyles.autumn);
+  } else if (data.main.temp > 15 && data.main.temp <= 20) {
+    map.setStyle(mapStyles.spring);
+  } else if (data.main.temp > 20 && data.main.temp <= 30) {
     map.setStyle(mapStyles.summer);
+  } else if (data.main.temp > 30 && data.main.temp <= 40) {
+    map.setStyle(mapStyles.tropical);
+  } else if (data.main.temp > 40) {
+    map.setStyle(mapStyles.desert);
   }
 }
 
@@ -102,7 +117,7 @@ function createFullscreenQuad(gl) {
 onMounted(() => {
   map = new mapboxgl.Map({
     container: "map",
-    style: mapStyles.summer,
+    style: mapStyles.placeholder,
     zoom: mapStore.zoom,
     center: [mapStore.lng, mapStore.lat],
     accessToken: apiKey ?? "",
