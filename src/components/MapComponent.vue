@@ -109,14 +109,6 @@ async function setMapStyle() {
 
   console.log(data.weather[0].main);
 
-  if (
-    data.weather[0].main === "Mist" ||
-    data.weather[0].main === "Fog" ||
-    data.weather[0].main === "Haze"
-  ) {
-    addShaderLayer("fogLayer", fogVertexShader, fogFragmentShader);
-  }
-
   if (data.main.temp <= 0) {
     map.setStyle(mapStyles.winter);
   } else if (data.main.temp > 0 && data.main.temp <= 10) {
@@ -130,6 +122,16 @@ async function setMapStyle() {
   } else if (data.main.temp > 40) {
     map.setStyle(mapStyles.desert);
   }
+
+  map.on("load", async () => {
+    if (
+      data.weather[0].main === "Mist" ||
+      data.weather[0].main === "Fog" ||
+      data.weather[0].main === "Haze"
+    ) {
+      addShaderLayer("fogLayer", fogVertexShader, fogFragmentShader);
+    }
+  });
 }
 
 onMounted(async () => {
@@ -142,9 +144,7 @@ onMounted(async () => {
     accessToken: apiKey ?? "",
   });
 
-  map.on("load", async () => {
-    await setMapStyle();
-  });
+  await setMapStyle();
 
   map.on("moveend", async () => {
     mapStore.setCoordinates(map.getCenter().lng, map.getCenter().lat);
