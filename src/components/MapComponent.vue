@@ -42,7 +42,7 @@ const mapStyles = {
 async function setMapStyle() {
   const data = await weatherStore.fetchWeatherData(mapStore.lng, mapStore.lat);
 
-  if (data.main.temp < 10) {
+  if (data.main.temp < 0) {
     map.setStyle(mapStyles.winter);
   } else {
     map.setStyle(mapStyles.summer);
