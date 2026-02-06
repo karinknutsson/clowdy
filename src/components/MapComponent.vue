@@ -27,8 +27,7 @@ const weatherStore = useWeatherStore();
 let map;
 const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
 let currentLayerId = null;
-// let currentStyle = null;
-let setStyle = null;
+let displayedStyle = null;
 const x = ref(0);
 const y = ref(0);
 const showOverlay = ref(false);
@@ -130,6 +129,25 @@ async function setMapStyle() {
   }
 
   function setShader() {
+    switch (data.weather[0].main) {
+      case "Fog":
+        addShaderLayer("fogLayer", atmosphereVertexShader, fogFragmentShader);
+        break;
+      case "Mist":
+        addShaderLayer("mistLayer", atmosphereVertexShader, mistFragmentShader);
+        break;
+      case "Dust":
+      case "Sand":
+        addShaderLayer("dustLayer", atmosphereVertexShader, dustFragmentShader);
+        break;
+      case "Rain":
+        addShaderLayer("rainLayer", atmosphereVertexShader, rainFragmentShader);
+        break;
+      default:
+        removeLayerIfExists(currentLayerId);
+        break;
+    }
+
     if (data.weather[0].main === "Fog") {
       addShaderLayer("fogLayer", atmosphereVertexShader, fogFragmentShader);
     } else if (data.weather[0].main === "Mist") {
@@ -142,9 +160,9 @@ async function setMapStyle() {
     }
   }
 
-  if (currentStyle !== setStyle) {
+  if (currentStyle !== displayedStyle) {
     map.setStyle(mapStyles[currentStyle]);
-    setStyle = currentStyle;
+    displayedStyle = currentStyle;
 
     map.on("style.load", () => {
       setShader();
