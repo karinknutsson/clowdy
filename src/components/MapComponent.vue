@@ -12,7 +12,7 @@ import { useSearchStore } from "src/stores/search-store";
 import { useMapStore } from "src/stores/map-store";
 import { useWeatherStore } from "src/stores/weather-store";
 
-import atmosphereVertexShader from "src/shaders/atmosphere/vertexShader.glsl?raw";
+import vertexShader from "src/shaders/vertexShader.glsl?raw";
 import fogFragmentShader from "src/shaders/atmosphere/fogFragmentShader.glsl?raw";
 import mistFragmentShader from "src/shaders/atmosphere/mistFragmentShader.glsl?raw";
 import hazeFragmentShader from "src/shaders/atmosphere/hazeFragmentShader.glsl?raw";
@@ -183,32 +183,33 @@ async function setMapStyle() {
       // Atmospheric conditions
       case "Fog":
         texturePath = "";
-        addShaderLayer("fogLayer", atmosphereVertexShader, fogFragmentShader);
+        addShaderLayer("fogLayer", vertexShader, fogFragmentShader);
         break;
       case "Mist":
         texturePath = "";
-        addShaderLayer("mistLayer", atmosphereVertexShader, mistFragmentShader);
+        addShaderLayer("mistLayer", vertexShader, mistFragmentShader);
         break;
       case "Dust":
       case "Sand":
         texturePath = "";
-        addShaderLayer("dustLayer", atmosphereVertexShader, dustFragmentShader);
+        addShaderLayer("dustLayer", vertexShader, dustFragmentShader);
         break;
       case "Haze":
         texturePath = "";
-        addShaderLayer("hazeLayer", atmosphereVertexShader, hazeFragmentShader);
+        addShaderLayer("hazeLayer", vertexShader, hazeFragmentShader);
         break;
       case "Ash":
         texturePath = "./noise-textures/Perlin23-512x512.png";
-        addShaderLayer("asjLayer", atmosphereVertexShader, ashFragmentShader);
+        addShaderLayer("asjLayer", vertexShader, ashFragmentShader);
         break;
       case "Smoke":
         texturePath = "./noise-textures/SuperPerlin2-512x512.png";
-        addShaderLayer("smokeLayer", atmosphereVertexShader, smokeFragmentShader);
+        addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
         break;
       // Precipitation
+      // Precipitation
       case "Rain":
-        addShaderLayer("rainLayer", atmosphereVertexShader, rainFragmentShader);
+        addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
         break;
       default:
         removeLayerIfExists(currentLayerId);
