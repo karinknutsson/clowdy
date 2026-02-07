@@ -10,8 +10,14 @@ out vec4 outColor;
 void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
-    float smoke = texture(uTexture, uv).r;
+    float ash = texture(uTexture, uv).r;
+    ash = smoothstep(0.2, 1.0, ash);
 
     float opacity = distance(uv, vec2(0.5));
-    outColor = vec4(0.0, 0.0, 0.0, smoke);
+    opacity = smoothstep(0.0, 0.5, opacity);
+    ash *= opacity;
+
+    vec3 color = vec3(0.0902, 0.1137, 0.1294);
+
+    outColor = vec4(color, ash);
 }

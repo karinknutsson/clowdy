@@ -92,7 +92,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       );
 
       const image = new Image();
-      image.src = "./noise-textures/Perlin16-512x512.png";
+      image.src = "./noise-textures/Perlin23-512x512.png";
       image.onload = () => {
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
@@ -168,8 +168,7 @@ async function setMapStyle() {
         addShaderLayer("fogLayer", atmosphereVertexShader, fogFragmentShader);
         break;
       case "Mist":
-        // addShaderLayer("mistLayer", atmosphereVertexShader, mistFragmentShader);
-        addShaderLayer("mistLayer", atmosphereVertexShader, ashFragmentShader);
+        addShaderLayer("mistLayer", atmosphereVertexShader, mistFragmentShader);
         break;
       case "Dust":
       case "Sand":
@@ -180,6 +179,9 @@ async function setMapStyle() {
         break;
       case "Rain":
         addShaderLayer("rainLayer", atmosphereVertexShader, rainFragmentShader);
+        break;
+      case "Ash":
+        addShaderLayer("mistLayer", atmosphereVertexShader, ashFragmentShader);
         break;
       default:
         removeLayerIfExists(currentLayerId);
