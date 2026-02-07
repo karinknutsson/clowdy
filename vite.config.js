@@ -5,6 +5,8 @@ export default defineConfig({
   plugins: [
     glsl({
       include: ["**/*.glsl", "**/*.wgsl", "**/*.vert", "**/*.frag", "**/*.vs", "**/*.fs"],
+      defaultExtension: "glsl",
+      compress: false,
     }),
   ],
 });

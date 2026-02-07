@@ -8,7 +8,7 @@ uniform sampler2D uTexture;
 
 out vec4 outColor;
 
-vec2 rotateUV(vec2 uv, float angle, vec2 center) {
+vec2 rotateUv(vec2 uv, float angle, vec2 center) {
     uv -= center;
     float s = sin(angle);
     float c = cos(angle);
@@ -26,7 +26,7 @@ void main() {
     vec2 speed = vec2(0.02, 0.01);
     vec2 movingUv = uv + speed * uTime;
 
-    movingUv = rotateUV(movingUv, uTime * 0.03, vec2(0.5));
+    movingUv = rotateUv(movingUv, uTime * 0.03, vec2(0.5));
     movingUv = fract(movingUv);
 
     float ash = texture(uTexture, movingUv).r;

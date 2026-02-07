@@ -186,8 +186,8 @@ async function setMapStyle() {
         addShaderLayer("fogLayer", atmosphereVertexShader, fogFragmentShader);
         break;
       case "Mist":
-        texturePath = "./noise-textures/Perlin23-512x512.png";
-        addShaderLayer("asjLayer", atmosphereVertexShader, ashFragmentShader);
+        texturePath = "./noise-textures/SuperPerlin2-512x512.png";
+        addShaderLayer("smokeLayer", atmosphereVertexShader, smokeFragmentShader);
         // texturePath = "";
         // addShaderLayer("mistLayer", atmosphereVertexShader, mistFragmentShader);
         break;
