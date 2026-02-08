@@ -13,12 +13,15 @@ import { useMapStore } from "src/stores/map-store";
 import { useWeatherStore } from "src/stores/weather-store";
 
 import vertexShader from "src/shaders/vertexShader.glsl?raw";
+
 import fogFragmentShader from "src/shaders/atmosphere/fogFragmentShader.glsl?raw";
 import mistFragmentShader from "src/shaders/atmosphere/mistFragmentShader.glsl?raw";
 import hazeFragmentShader from "src/shaders/atmosphere/hazeFragmentShader.glsl?raw";
 import dustFragmentShader from "src/shaders/atmosphere/dustFragmentShader.glsl?raw";
 import ashFragmentShader from "src/shaders/atmosphere/ashFragmentShader.glsl?raw";
 import smokeFragmentShader from "src/shaders/atmosphere/smokeFragmentShader.glsl?raw";
+
+import overcastFragmentShader from "src/shaders/clouds/overcastFragmentShader.glsl?raw";
 
 import rainFragmentShader from "src/shaders/rain/rainFragmentShader.glsl?raw";
 
@@ -206,7 +209,11 @@ async function setMapStyle() {
         texturePath = "./noise-textures/SuperPerlin2-512x512.png";
         addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
         break;
-      // Precipitation
+      // Clouds
+      case "Clouds":
+        texturePath = "./noise-textures/Milky6-512x512.png";
+        addShaderLayer("overcastLayer", vertexShader, overcastFragmentShader);
+        break;
       // Precipitation
       case "Rain":
         addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
