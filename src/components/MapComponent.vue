@@ -203,7 +203,7 @@ async function setMapStyle() {
     currentStyle = "desert";
   }
 
-  const testWeather = "Clouds";
+  const testWeather = "Rain";
 
   function setShader() {
     // switch (data.weather[0].main) {
@@ -256,7 +256,7 @@ async function setMapStyle() {
       case "Rain":
         texturePaths = [
           "./noise-textures/Milky6-512x512.png",
-          "./noise-textures/Perlin18-512x512.png",
+          "./noise-textures/Perlin24-512x512.png",
         ];
         addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
         break;
