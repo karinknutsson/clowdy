@@ -89,11 +89,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       this.uIntensity = gl.getUniformLocation(this.program, "uIntensity");
       this.uResolution = gl.getUniformLocation(this.program, "uResolution");
 
-      // if (texturePath) {
-      //   this.uTexture = gl.getUniformLocation(this.program, "uTexture");
-      //   this.uTime = gl.getUniformLocation(this.program, "uTime");
-      // }
-
+      // Set texture uniforms if needed
       if (texturePaths.length) {
         for (let i = 0; i < texturePaths.length; i++) {
           this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${i}`));
@@ -109,33 +105,6 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
           this.addTexture(gl, path);
         });
       }
-
-      // if (texturePath) {
-      //   this.texture = gl.createTexture();
-      //   gl.bindTexture(gl.TEXTURE_2D, this.texture);
-      //   gl.texImage2D(
-      //     gl.TEXTURE_2D,
-      //     0,
-      //     gl.RGBA,
-      //     1,
-      //     1,
-      //     0,
-      //     gl.RGBA,
-      //     gl.UNSIGNED_BYTE,
-      //     new Uint8Array([0, 0, 255, 255]),
-      //   );
-
-      //   const image = new Image();
-      //   image.src = texturePath;
-      //   image.onload = () => {
-      //     gl.bindTexture(gl.TEXTURE_2D, this.texture);
-      //     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-      //     gl.generateMipmap(gl.TEXTURE_2D);
-      //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-      //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      //   };
-      // }
     },
 
     addTexture(gl, path) {
