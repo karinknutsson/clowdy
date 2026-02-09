@@ -4,7 +4,7 @@ precision mediump float;
 
 uniform vec2 uResolution;
 uniform float uTime;
-uniform sampler2D uTexture;
+uniform sampler2D uTexture0;
 
 out vec4 outColor;
 
@@ -29,7 +29,7 @@ void main() {
     movingUv = rotateUv(movingUv, uTime * 0.003, vec2(0.5));
     movingUv = fract(movingUv);
 
-    float cloud = texture(uTexture, movingUv).r;
+    float cloud = texture(uTexture0, movingUv).r;
 
     // Invert cloud texture
     float invertedCloud = 1.0 - cloud;

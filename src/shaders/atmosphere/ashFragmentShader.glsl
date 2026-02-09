@@ -4,7 +4,7 @@ precision mediump float;
 
 uniform vec2 uResolution;
 uniform float uTime;
-uniform sampler2D uTexture;
+uniform sampler2D uTexture0;
 
 out vec4 outColor;
 
@@ -27,9 +27,8 @@ void main() {
     vec2 movingUv = uv + speed * uTime;
 
     movingUv = rotateUv(movingUv, uTime * 0.03, vec2(0.5));
-    // movingUv = fract(movingUv);
 
-    float ash = texture(uTexture, movingUv).r;
+    float ash = texture(uTexture0, movingUv).r;
     ash = smoothstep(0.2, 1.0, ash);
 
     float opacity = distance(uv, vec2(0.5));
