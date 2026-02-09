@@ -221,8 +221,8 @@ async function setMapStyle() {
         if (data.weather[0].description.includes("overcast")) {
           // texturePath = "./noise-textures/Milky6-512x512.png";
           // addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
-          texturePath = "./noise-textures/Milky7-512x512.png";
-          addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
+          texturePath = "./noise-textures/Milky6-512x512.png";
+          addShaderLayer("scatteredCloudsLayer", vertexShader, scatteredCloudsFragmentShader);
         } else if (data.weather[0].description.includes("broken")) {
           texturePath = "./noise-textures/Milky7-512x512.png";
           addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
