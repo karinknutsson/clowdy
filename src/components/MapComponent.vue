@@ -12,13 +12,19 @@ import { useSearchStore } from "src/stores/search-store";
 import { useMapStore } from "src/stores/map-store";
 import { useWeatherStore } from "src/stores/weather-store";
 
-import atmosphereVertexShader from "src/shaders/atmosphere/vertexShader.glsl?raw";
+import vertexShader from "src/shaders/vertexShader.glsl?raw";
+
 import fogFragmentShader from "src/shaders/atmosphere/fogFragmentShader.glsl?raw";
 import mistFragmentShader from "src/shaders/atmosphere/mistFragmentShader.glsl?raw";
 import hazeFragmentShader from "src/shaders/atmosphere/hazeFragmentShader.glsl?raw";
 import dustFragmentShader from "src/shaders/atmosphere/dustFragmentShader.glsl?raw";
 import ashFragmentShader from "src/shaders/atmosphere/ashFragmentShader.glsl?raw";
 import smokeFragmentShader from "src/shaders/atmosphere/smokeFragmentShader.glsl?raw";
+
+import overcastCloudsFragmentShader from "src/shaders/clouds/overcastCloudsFragmentShader.glsl?raw";
+import brokenCloudsFragmentShader from "src/shaders/clouds/brokenCloudsFragmentShader.glsl?raw";
+import scatteredCloudsFragmentShader from "src/shaders/clouds/scatteredCloudsFragmentShader.glsl?raw";
+import fewCloudsFragmentShader from "src/shaders/clouds/fewCloudsFragmentShader.glsl?raw";
 
 import rainFragmentShader from "src/shaders/rain/rainFragmentShader.glsl?raw";
 
@@ -109,8 +115,8 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
           gl.bindTexture(gl.TEXTURE_2D, this.texture);
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
           gl.generateMipmap(gl.TEXTURE_2D);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         };
       }
@@ -126,6 +132,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
       gl.uniform1i(this.uTexture, 0);
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
@@ -183,32 +190,50 @@ async function setMapStyle() {
       // Atmospheric conditions
       case "Fog":
         texturePath = "";
-        addShaderLayer("fogLayer", atmosphereVertexShader, fogFragmentShader);
+        addShaderLayer("fogLayer", vertexShader, fogFragmentShader);
         break;
       case "Mist":
         texturePath = "";
-        addShaderLayer("mistLayer", atmosphereVertexShader, mistFragmentShader);
+        addShaderLayer("mistLayer", vertexShader, mistFragmentShader);
         break;
       case "Dust":
       case "Sand":
         texturePath = "";
-        addShaderLayer("dustLayer", atmosphereVertexShader, dustFragmentShader);
+        addShaderLayer("dustLayer", vertexShader, dustFragmentShader);
         break;
       case "Haze":
         texturePath = "";
-        addShaderLayer("hazeLayer", atmosphereVertexShader, hazeFragmentShader);
+        addShaderLayer("hazeLayer", vertexShader, hazeFragmentShader);
         break;
       case "Ash":
         texturePath = "./noise-textures/Perlin23-512x512.png";
-        addShaderLayer("asjLayer", atmosphereVertexShader, ashFragmentShader);
+        addShaderLayer("ashLayer", vertexShader, ashFragmentShader);
         break;
       case "Smoke":
         texturePath = "./noise-textures/SuperPerlin2-512x512.png";
-        addShaderLayer("smokeLayer", atmosphereVertexShader, smokeFragmentShader);
+        addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
         break;
+
+      // Clouds
+      case "Clouds":
+        if (data.weather[0].description.includes("overcast")) {
+          texturePath = "./noise-textures/Milky6-512x512.png";
+          addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
+        } else if (data.weather[0].description.includes("broken")) {
+          texturePath = "./noise-textures/Milky7-512x512.png";
+          addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
+        } else if (data.weather[0].description.includes("scattered")) {
+          texturePath = "./noise-textures/Milky6-512x512.png";
+          addShaderLayer("scatteredCloudsLayer", vertexShader, scatteredCloudsFragmentShader);
+        } else {
+          texturePath = "./noise-textures/Milky6-512x512.png";
+          addShaderLayer("fewCloudsLayer", vertexShader, fewCloudsFragmentShader);
+        }
+        break;
+
       // Precipitation
       case "Rain":
-        addShaderLayer("rainLayer", atmosphereVertexShader, rainFragmentShader);
+        addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
         break;
       default:
         removeLayerIfExists(currentLayerId);
