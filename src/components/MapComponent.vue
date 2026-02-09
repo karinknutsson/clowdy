@@ -113,8 +113,8 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
           gl.bindTexture(gl.TEXTURE_2D, this.texture);
           gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
           gl.generateMipmap(gl.TEXTURE_2D);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.MIRRORED_REPEAT);
           gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         };
       }
@@ -130,12 +130,6 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
-
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
 
       gl.uniform1i(this.uTexture, 0);
 
@@ -199,8 +193,9 @@ async function setMapStyle() {
       case "Mist":
         texturePath = "";
         addShaderLayer("mistLayer", vertexShader, mistFragmentShader);
-        texturePath = "./noise-textures/Milky6-512x512.png";
-        addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
+
+        texturePath = "./noise-textures/Milky7-512x512.png";
+        addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
         break;
       case "Dust":
       case "Sand":
@@ -221,10 +216,13 @@ async function setMapStyle() {
         break;
       // Clouds
       case "Clouds":
-        // texturePath = "./noise-textures/Milky6-512x512.png";
-        texturePath = "./noise-textures/Milky7-512x512.png";
-        // addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
-        addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
+        if (data.weather[0].description.includes("overcast")) {
+          texturePath = "./noise-textures/Milky6-512x512.png";
+          addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
+        } else {
+          texturePath = "./noise-textures/Milky7-512x512.png";
+          addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
+        }
         break;
       // Precipitation
       case "Rain":
