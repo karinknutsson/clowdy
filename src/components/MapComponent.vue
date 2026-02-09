@@ -27,6 +27,7 @@ import scatteredCloudsFragmentShader from "src/shaders/clouds/scatteredCloudsFra
 import fewCloudsFragmentShader from "src/shaders/clouds/fewCloudsFragmentShader.glsl?raw";
 
 import rainFragmentShader from "src/shaders/rain/rainFragmentShader.glsl?raw";
+import drizzleFragmentShader from "src/shaders/rain/drizzleFragmentShader.glsl?raw";
 
 import { createProgram, createFullscreenQuad } from "src/utils/shader-helpers";
 
@@ -203,7 +204,7 @@ async function setMapStyle() {
     currentStyle = "desert";
   }
 
-  const testWeather = "Rain";
+  const testWeather = "Drizzle";
 
   function setShader() {
     // switch (data.weather[0].main) {
@@ -260,6 +261,15 @@ async function setMapStyle() {
         ];
         addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
         break;
+      case "Drizzle":
+        texturePaths = [
+          "./noise-textures/Milky6-512x512.png",
+          "./noise-textures/Perlin24-512x512.png",
+        ];
+        addShaderLayer("drizzleLayer", vertexShader, drizzleFragmentShader);
+        break;
+
+      // Clear sky: no shader needed
       default:
         removeLayerIfExists(currentLayerId);
         break;
