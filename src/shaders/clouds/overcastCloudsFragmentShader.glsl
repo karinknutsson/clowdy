@@ -27,7 +27,6 @@ void main() {
     vec2 movingUv = uv + speed * uTime;
 
     movingUv = rotateUv(movingUv, uTime * 0.003, vec2(0.5));
-    movingUv = fract(movingUv);
 
     float cloud = texture(uTexture, movingUv).r;
 
@@ -44,8 +43,8 @@ void main() {
     float opacity = distance(uv, vec2(0.5)) * 1.5;
     opacity = smoothstep(0.0, 0.5, opacity);
 
-    vec3 color = vec3(0.85, 0.86, 0.87);
-    // vec3 color = vec3(1.0, 1.0, 1.0);
+    // vec3 color = vec3(0.85, 0.86, 0.87);
+    vec3 color = vec3(1.0, 0.0, 0.0);
 
     outColor = vec4(color * combinedCloud, opacity);
 }

@@ -130,6 +130,13 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, this.texture);
+
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
       gl.uniform1i(this.uTexture, 0);
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
@@ -192,6 +199,8 @@ async function setMapStyle() {
       case "Mist":
         texturePath = "";
         addShaderLayer("mistLayer", vertexShader, mistFragmentShader);
+        texturePath = "./noise-textures/Milky6-512x512.png";
+        addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
         break;
       case "Dust":
       case "Sand":
@@ -204,7 +213,7 @@ async function setMapStyle() {
         break;
       case "Ash":
         texturePath = "./noise-textures/Perlin23-512x512.png";
-        addShaderLayer("asjLayer", vertexShader, ashFragmentShader);
+        addShaderLayer("ashLayer", vertexShader, ashFragmentShader);
         break;
       case "Smoke":
         texturePath = "./noise-textures/SuperPerlin2-512x512.png";

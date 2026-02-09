@@ -27,7 +27,7 @@ void main() {
     vec2 movingUv = uv + speed * uTime;
 
     movingUv = rotateUv(movingUv, uTime * 0.03, vec2(0.5));
-    movingUv = fract(movingUv);
+    // movingUv = fract(movingUv);
 
     float ash = texture(uTexture, movingUv).r;
     ash = smoothstep(0.2, 1.0, ash);
