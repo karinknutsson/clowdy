@@ -39,7 +39,7 @@ let map;
 const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
 let currentLayerId = null;
 let displayedStyle = null;
-let texturePath = "";
+let texturePaths = [];
 const x = ref(0);
 const y = ref(0);
 const showOverlay = ref(false);
@@ -77,8 +77,11 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
     renderingMode: "2d",
 
     onAdd: function (_, gl) {
-      this.program = createProgram(gl, vertexShader, fragmentShader);
+      this.textures = [];
+      this.textureUniforms = [];
+      this.nextTextureUnit = 0;
 
+      this.program = createProgram(gl, vertexShader, fragmentShader);
       if (!this.program) return;
 
       // Set attributes and uniforms
@@ -86,40 +89,85 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       this.uIntensity = gl.getUniformLocation(this.program, "uIntensity");
       this.uResolution = gl.getUniformLocation(this.program, "uResolution");
 
-      if (texturePath) {
-        this.uTexture = gl.getUniformLocation(this.program, "uTexture");
+      // if (texturePath) {
+      //   this.uTexture = gl.getUniformLocation(this.program, "uTexture");
+      //   this.uTime = gl.getUniformLocation(this.program, "uTime");
+      // }
+
+      if (texturePaths.length) {
+        for (let i = 0; i < texturePaths.length; i++) {
+          this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${i}`));
+        }
         this.uTime = gl.getUniformLocation(this.program, "uTime");
       }
 
       this.buffer = createFullscreenQuad(gl);
 
-      // Load texture if needed
-      if (texturePath) {
-        this.texture = gl.createTexture();
-        gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.texImage2D(
-          gl.TEXTURE_2D,
-          0,
-          gl.RGBA,
-          1,
-          1,
-          0,
-          gl.RGBA,
-          gl.UNSIGNED_BYTE,
-          new Uint8Array([0, 0, 255, 255]),
-        );
-
-        const image = new Image();
-        image.src = texturePath;
-        image.onload = () => {
-          gl.bindTexture(gl.TEXTURE_2D, this.texture);
-          gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
-          gl.generateMipmap(gl.TEXTURE_2D);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
-          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        };
+      // Load textures if needed
+      if (texturePaths.length) {
+        texturePaths.forEach((path, index) => {
+          this.addTexture(gl, path);
+        });
       }
+
+      // if (texturePath) {
+      //   this.texture = gl.createTexture();
+      //   gl.bindTexture(gl.TEXTURE_2D, this.texture);
+      //   gl.texImage2D(
+      //     gl.TEXTURE_2D,
+      //     0,
+      //     gl.RGBA,
+      //     1,
+      //     1,
+      //     0,
+      //     gl.RGBA,
+      //     gl.UNSIGNED_BYTE,
+      //     new Uint8Array([0, 0, 255, 255]),
+      //   );
+
+      //   const image = new Image();
+      //   image.src = texturePath;
+      //   image.onload = () => {
+      //     gl.bindTexture(gl.TEXTURE_2D, this.texture);
+      //     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+      //     gl.generateMipmap(gl.TEXTURE_2D);
+      //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+      //     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      //   };
+      // }
+    },
+
+    addTexture(gl, path) {
+      const texture = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, texture);
+
+      // 1x1 placeholder
+      gl.texImage2D(
+        gl.TEXTURE_2D,
+        0,
+        gl.RGBA,
+        1,
+        1,
+        0,
+        gl.RGBA,
+        gl.UNSIGNED_BYTE,
+        new Uint8Array([0, 0, 0, 255]),
+      );
+
+      const image = new Image();
+      image.src = path;
+      image.onload = () => {
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      };
+
+      this.textures.push({ texture, unit: this.nextTextureUnit });
+      this.nextTextureUnit++;
     },
 
     render: function (gl, _) {
@@ -130,10 +178,11 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       const time = (performance.now() - startTime) * 0.001;
       gl.uniform1f(this.uTime, time);
 
-      gl.activeTexture(gl.TEXTURE0);
-      gl.bindTexture(gl.TEXTURE_2D, this.texture);
-
-      gl.uniform1i(this.uTexture, 0);
+      this.textures.forEach((t, i) => {
+        gl.activeTexture(gl.TEXTURE0 + t.unit);
+        gl.bindTexture(gl.TEXTURE_2D, t.texture);
+        gl.uniform1i(this.textureUniforms[i], t.unit);
+      });
 
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
       gl.enableVertexAttribArray(this.aPos);
@@ -185,54 +234,61 @@ async function setMapStyle() {
     currentStyle = "desert";
   }
 
+  const testWeather = "Clouds";
+
   function setShader() {
-    switch (data.weather[0].main) {
+    // switch (data.weather[0].main) {
+    switch (testWeather) {
       // Atmospheric conditions
       case "Fog":
-        texturePath = "";
+        texturePaths = [];
         addShaderLayer("fogLayer", vertexShader, fogFragmentShader);
         break;
       case "Mist":
-        texturePath = "";
+        texturePaths = [];
         addShaderLayer("mistLayer", vertexShader, mistFragmentShader);
         break;
       case "Dust":
       case "Sand":
-        texturePath = "";
+        texturePaths = [];
         addShaderLayer("dustLayer", vertexShader, dustFragmentShader);
         break;
       case "Haze":
-        texturePath = "";
+        texturePaths = [];
         addShaderLayer("hazeLayer", vertexShader, hazeFragmentShader);
         break;
       case "Ash":
-        texturePath = "./noise-textures/Perlin23-512x512.png";
+        texturePaths = ["./noise-textures/Perlin23-512x512.png"];
         addShaderLayer("ashLayer", vertexShader, ashFragmentShader);
         break;
       case "Smoke":
-        texturePath = "./noise-textures/SuperPerlin2-512x512.png";
+        texturePaths = ["./noise-textures/SuperPerlin2-512x512.png"];
         addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
         break;
 
       // Clouds
       case "Clouds":
         if (data.weather[0].description.includes("overcast")) {
-          texturePath = "./noise-textures/Milky6-512x512.png";
+          texturePaths = ["./noise-textures/Milky6-512x512.png"];
           addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
         } else if (data.weather[0].description.includes("broken")) {
-          texturePath = "./noise-textures/Milky7-512x512.png";
+          texturePaths = ["./noise-textures/Milky7-512x512.png"];
           addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
         } else if (data.weather[0].description.includes("scattered")) {
-          texturePath = "./noise-textures/Milky6-512x512.png";
+          texturePaths = ["./noise-textures/Milky6-512x512.png"];
           addShaderLayer("scatteredCloudsLayer", vertexShader, scatteredCloudsFragmentShader);
         } else {
-          texturePath = "./noise-textures/Milky6-512x512.png";
+          texturePaths = ["./noise-textures/Milky6-512x512.png"];
           addShaderLayer("fewCloudsLayer", vertexShader, fewCloudsFragmentShader);
         }
         break;
 
       // Precipitation
       case "Rain":
+        texturePaths = [
+          "./noise-textures/Milky6-512x512.png",
+          "./noise-textures/Perlin18-512x512.png",
+        ];
         addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
         break;
       default:
