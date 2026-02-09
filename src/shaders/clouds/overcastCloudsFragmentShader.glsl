@@ -32,19 +32,16 @@ void main() {
 
     // Invert cloud texture
     float invertedCloud = 1.0 - cloud;
+    invertedCloud = pow(invertedCloud, 2.0) * 1.5;
 
     // Combine original and inverted textures
-    // float combinedCloud = 1.0 - (cloud * invertedCloud);
-    float combinedCloud = 1.0 - (cloud * pow(invertedCloud, 2.0));
-
-    // float combinedCloud = abs((cloud - 0.5) * 2.0) + 0.5;
+    float combinedCloud = 1.0 - (cloud * invertedCloud);
 
     // Opacity for center view
     float opacity = distance(uv, vec2(0.5)) * 1.5;
-    opacity = smoothstep(0.0, 0.5, opacity);
+    opacity = smoothstep(0.0, 0.7, opacity);
 
-    // vec3 color = vec3(0.85, 0.86, 0.87);
-    vec3 color = vec3(1.0, 0.0, 0.0);
+    vec3 color = vec3(0.85, 0.86, 0.87);
 
     outColor = vec4(color * combinedCloud, opacity);
 }
