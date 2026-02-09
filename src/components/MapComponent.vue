@@ -204,11 +204,11 @@ async function setMapStyle() {
     currentStyle = "desert";
   }
 
-  const testWeather = "Drizzle";
+  const testWeather = "Rain";
 
   function setShader() {
-    // switch (data.weather[0].main) {
-    switch (testWeather) {
+    switch (data.weather[0].main) {
+      // switch (testWeather) {
       // Atmospheric conditions
       case "Fog":
         texturePaths = [];
