@@ -144,12 +144,13 @@ watch(searchTerm, async (value) => {
   } else {
     await searchStore.fetchSuggestions(value);
 
-    // if (searchStore.suggestions.length) {
-
-    //   gsap.set(".search-suggestions", {
-    //     width: searchBarFullWidth.value,
-    //   });
-    // }
+    if (searchStore.suggestions.length) {
+      if ($q.screen.gt.md) {
+        gsap.set(".search-suggestions", {
+          width: searchBarFullWidth.value,
+        });
+      }
+    }
   }
 });
 
@@ -250,6 +251,7 @@ li {
   left: 4vw;
   background: #ffde90;
   border-radius: 8px;
+  width: v-bind(searchBarFullWidth);
 }
 
 .search-input {
