@@ -41,6 +41,7 @@ let displayedStyle = null;
 let texturePaths = [];
 const x = ref(0);
 const y = ref(0);
+let windStrength = 0;
 
 const mapStyles = {
   placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z",
@@ -78,13 +79,14 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       this.aPos = gl.getAttribLocation(this.program, "a_pos");
       this.uIntensity = gl.getUniformLocation(this.program, "uIntensity");
       this.uResolution = gl.getUniformLocation(this.program, "uResolution");
+      this.uTime = gl.getUniformLocation(this.program, "uTime");
+      this.uWind = gl.getUniformLocation(this.program, "uWind");
 
       // Set texture uniforms if needed
       if (texturePaths.length) {
         for (let i = 0; i < texturePaths.length; i++) {
           this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${i}`));
         }
-        this.uTime = gl.getUniformLocation(this.program, "uTime");
       }
 
       this.buffer = createFullscreenQuad(gl);
@@ -136,6 +138,9 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       const time = (performance.now() - startTime) * 0.001;
       gl.uniform1f(this.uTime, time);
+      gl.uniform1f(this.uIntensity, 0.6);
+      gl.uniform2f(this.uResolution, gl.canvas.width, gl.canvas.height);
+      gl.uniform1f(this.uWind, windStrength);
 
       this.textures.forEach((t, i) => {
         gl.activeTexture(gl.TEXTURE0 + t.unit);
@@ -146,9 +151,6 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
       gl.enableVertexAttribArray(this.aPos);
       gl.vertexAttribPointer(this.aPos, 2, gl.FLOAT, false, 0, 0);
-
-      gl.uniform1f(this.uIntensity, 0.6);
-      gl.uniform2f(this.uResolution, gl.canvas.width, gl.canvas.height);
 
       gl.enable(gl.BLEND);
       gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
@@ -179,6 +181,7 @@ async function setMapStyle() {
 
   weatherStore.setCurrentTemp(Math.round(data.main.temp));
   weatherStore.setCurrentLocation(data.name);
+  windStrength = data.wind.speed;
   console.log(data);
 
   let currentStyle;
