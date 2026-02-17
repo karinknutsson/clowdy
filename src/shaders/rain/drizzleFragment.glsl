@@ -4,6 +4,7 @@ precision mediump float;
 
 uniform vec2 uResolution;
 uniform float uTime;
+uniform float uWind;
 uniform sampler2D uTexture0;
 uniform sampler2D uTexture1;
 
