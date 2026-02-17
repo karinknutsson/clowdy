@@ -1,6 +1,4 @@
 <template>
-  <div class="overlay" v-if="showOverlay" :style="overlayStyle"></div>
-
   <div id="map" class="map-container"></div>
 </template>
 
@@ -43,15 +41,6 @@ let displayedStyle = null;
 let texturePaths = [];
 const x = ref(0);
 const y = ref(0);
-const showOverlay = ref(false);
-
-const overlayStyle = computed(() => {
-  const radius = Math.max(window.innerWidth, window.innerHeight) * 0.5;
-  return {
-    maskImage: `radial-gradient(circle ${radius}px at ${x.value}px ${y.value}px, transparent 0%, transparent 30%, black 100%)`,
-    WebkitMaskImage: `radial-gradient(circle ${radius}px at ${x.value}px ${y.value}px, transparent 0%, transparent 30%, black 100%)`,
-  };
-});
 
 const mapStyles = {
   placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z",
@@ -189,6 +178,7 @@ async function setMapStyle() {
   if (!data) return;
 
   weatherStore.setCurrentTemp(Math.round(data.main.temp));
+  weatherStore.setCurrentLocation(data.name);
   console.log(data);
 
   let currentStyle;
@@ -244,17 +234,14 @@ async function setMapStyle() {
 
       // Clouds
       case "Clouds":
+        texturePaths = ["./noise-textures/Milky6-512x512.png"];
         if (weatherDescription.includes("overcast")) {
-          texturePaths = ["./noise-textures/Milky6-512x512.png"];
           addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
         } else if (weatherDescription.includes("broken")) {
-          texturePaths = ["./noise-textures/Milky6-512x512.png"];
           addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
         } else if (weatherDescription.includes("scattered")) {
-          texturePaths = ["./noise-textures/Milky6-512x512.png"];
           addShaderLayer("scatteredCloudsLayer", vertexShader, scatteredCloudsFragmentShader);
         } else {
-          texturePaths = ["./noise-textures/Milky6-512x512.png"];
           addShaderLayer("fewCloudsLayer", vertexShader, fewCloudsFragmentShader);
         }
         break;
