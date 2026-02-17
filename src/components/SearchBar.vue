@@ -65,20 +65,18 @@ const searchBarBackground = computed(() => {
 
 const searchBarFullWidth = computed(() => {
   if ($q.screen.lt.md) {
-    return "92vw";
-  } else if ($q.screen.md) {
-    return "340px";
+    return "100%";
   } else {
     return "420px";
   }
 });
 
 onMounted(() => {
-  if ($q.screen.gt.sm) {
-    gsap.set(".search-input", {
-      padding: "6px 8px",
-    });
-  }
+  // if ($q.screen.gt.sm) {
+  gsap.set(".search-input", {
+    padding: "6px 8px",
+  });
+  // }
 });
 
 function clearSearchTerm() {
@@ -127,7 +125,7 @@ function onBlurSearch() {
 
   if (!searchTerm.value) {
     searchStore.isSearchOpen = false;
-    const width = $q.screen.lt.md ? "44px" : "136px";
+    const width = $q.screen.lt.md ? "100%" : "136px";
 
     gsap.to(".search-bar", {
       duration: 0.3,
@@ -171,17 +169,17 @@ watch(searchTerm, async (value) => {
 });
 
 watch(searchBarFullWidth, () => {
-  if ($q.screen.lt.md) {
-    gsap.to(".search-input", {
-      padding: "0",
-      duration: 0.1,
-    });
-  } else {
-    gsap.to(".search-input", {
-      padding: "6px 8px",
-      duration: 0.1,
-    });
-  }
+  // if ($q.screen.lt.md) {
+  //   gsap.to(".search-input", {
+  //     padding: "0",
+  //     duration: 0.1,
+  //   });
+  // } else {
+  gsap.to(".search-input", {
+    padding: "6px 8px",
+    duration: 0.1,
+  });
+  // }
 
   if (searchStore.isSearchOpen) {
     gsap.to(".search-bar", {
@@ -200,7 +198,7 @@ watch(searchBarFullWidth, () => {
       });
     }
   } else {
-    const width = $q.screen.lt.md ? "44px" : "136px";
+    const width = $q.screen.lt.md ? "100%" : "136px";
     gsap.to(".search-bar", {
       duration: 0.3,
       width,
@@ -246,7 +244,7 @@ li {
 .search-bar {
   pointer-events: auto;
   background: v-bind(searchBarBackground);
-  box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
+  // box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   border-radius: 2px;
   width: 136px;
   height: 56px;
@@ -267,13 +265,13 @@ li {
   top: 96px;
   left: 4vw;
   background: rgba(255, 255, 255, 0.7);
-  box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
+  // box-shadow: 0 2px 24px 0 rgba(83, 15, 148, 0.3);
   border-radius: 2px;
 }
 
 .search-input {
   background: transparent;
-  color: $deep-blue;
+  color: #0d0d0d;
   border: 0;
   padding: 0;
   font-size: 16px;
@@ -282,7 +280,7 @@ li {
 }
 
 .search-icon {
-  color: $deep-blue;
+  color: #0d0d0d;
   border: 0;
   padding: 8px;
   background: transparent;
@@ -293,7 +291,7 @@ li {
   background: transparent;
   border: 0;
   border-radius: 50%;
-  color: $deep-blue;
+  color: #0d0d0d;
   padding: 8px;
   margin-left: 8px;
 }
@@ -313,14 +311,14 @@ i {
 
 body.screen--sm,
 body.screen--xs {
-  .search-bar {
-    width: 44px;
-    height: 44px;
-    padding: 0 5px;
-  }
+  // .search-bar {
+  //   width: 44px;
+  //   height: 44px;
+  //   padding: 0 5px;
+  // }
 
-  i {
-    font-size: 18px;
-  }
+  // i {
+  //   font-size: 18px;
+  // }
 }
 </style>

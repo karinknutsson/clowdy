@@ -10,6 +10,7 @@ export const useWeatherStore = defineStore("weatherStore", {
     windSpeed: "",
     windDescription: "",
     location: "",
+    description: "",
   }),
   getters: {},
   actions: {

@@ -5,7 +5,7 @@ body {
   background-color: $body-bg;
   overflow: hidden;
   font-family: "Open Sans", sans-serif;
-  color: $deep-blue;
+  color: #0d0d0d;
 }
 
 h2 {
@@ -31,7 +31,7 @@ p {
   border-radius: 50%;
   width: 36px;
   height: 36px;
-  color: $deep-blue;
+  color: #0d0d0d;
   padding: 0;
   transform: translateX(8px);
 
@@ -79,11 +79,11 @@ input:focus {
 
 input::placeholder {
   opacity: 0.5;
-  color: $deep-blue;
+  color: #0d0d0d;
 }
 
 button.submit {
-  background: $deep-blue;
+  background: #0d0d0d;
   border: 0;
   color: white;
   text-transform: uppercase;

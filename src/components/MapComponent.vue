@@ -76,7 +76,6 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       // Set attributes and uniforms
       this.aPos = gl.getAttribLocation(this.program, "a_pos");
-      this.uIntensity = gl.getUniformLocation(this.program, "uIntensity");
       this.uResolution = gl.getUniformLocation(this.program, "uResolution");
       this.uTime = gl.getUniformLocation(this.program, "uTime");
       this.uWind = gl.getUniformLocation(this.program, "uWind");
@@ -137,7 +136,6 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       const time = (performance.now() - startTime) * 0.001;
       gl.uniform1f(this.uTime, time);
-      gl.uniform1f(this.uIntensity, 0.6);
       gl.uniform2f(this.uResolution, gl.canvas.width, gl.canvas.height);
       gl.uniform1f(this.uWind, weatherStore.windSpeed);
 
@@ -200,11 +198,11 @@ async function setMapStyle() {
     currentStyle = "desert";
   }
 
-  // const weatherMain = data.weather[0].main;
-  // const weatherDescription = data.weather[0].description;
+  const weatherMain = data.weather[0].main;
+  const weatherDescription = data.weather[0].description;
 
-  const weatherMain = "Clouds";
-  const weatherDescription = "broken clouds";
+  // const weatherMain = "Clouds";
+  // const weatherDescription = "broken clouds";
 
   function setShader() {
     switch (weatherMain) {
