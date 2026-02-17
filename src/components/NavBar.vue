@@ -1,14 +1,16 @@
 <template>
   <div class="nav-container">
-    <div class="temp-wrapper">
-      <div class="weather-description-wrapper">
-        <!-- <div class="feels-like-description">{{ weatherStore.feelsLikeDescription }}</div> -->
-        <div class="weather-description">{{ weatherStore.weatherType }}</div>
-        <div class="weather-description">{{ "Air temp " + weatherStore.airTemp + "°" }}</div>
-        <div class="weather-description">{{ weatherStore.windDescription + " wind" }}</div>
+    <div class="temp-container">
+      <div class="weather-description-wrapper-wrapper">
+        <!-- <div class="feels-like-wrapper">{{ weatherStore.feelsLikeDescription }}</div> -->
+        <div class="weather-description-wrapper">{{ weatherStore.weatherType }}</div>
+        <div class="weather-description-wrapper">
+          {{ "Air temp " + weatherStore.airTemp + "°" }}
+        </div>
+        <div class="weather-description-wrapper">{{ weatherStore.windDescription + " wind" }}</div>
       </div>
       <div class="feels-like-container">
-        <div class="feels-like-description">Feels like</div>
+        <div class="feels-like-wrapper">Feels like</div>
         <div class="feels-like-temp-wrapper">{{ weatherStore.feelsLikeTemp + "°" }}</div>
       </div>
     </div>
@@ -117,24 +119,21 @@ const $q = useQuasar();
   flex-direction: row-reverse;
   justify-content: space-between;
   pointer-events: none;
-  // background: rgba(255, 0, 255, 0.2);
 }
 
-.temp-wrapper {
+.temp-container {
   align-self: flex-start;
   display: flex;
-  // flex-direction: column;
   align-items: flex-start;
   justify-content: flex-start;
-  // border: 1px dotted white;
-  gap: 32px;
+  gap: 64px;
   background: #ffde90;
   border-radius: 8px;
   pointer-events: auto;
   padding: 16px;
 }
 
-.weather-description-wrapper {
+.weather-description-wrapper-wrapper {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -148,7 +147,7 @@ const $q = useQuasar();
   height: 100%;
 }
 
-.feels-like-description {
+.feels-like-wrapper {
   font-size: 1.2rem;
   font-weight: 900;
 }
@@ -156,11 +155,11 @@ const $q = useQuasar();
 .feels-like-temp-wrapper {
   font-size: 3.4rem;
   font-weight: 900;
-  line-height: 2.6rem;
+  line-height: 3.2rem;
   // border: 1px dotted red;
 }
 
-.weather-description {
+.weather-description-wrapper {
   font-size: 1rem;
   font-weight: 900;
 }
@@ -174,6 +173,11 @@ body.screen--sm,
 body.screen--xs {
   .nav-container {
     flex-direction: column;
+  }
+
+  .temp-container {
+    width: 92vw;
+    justify-content: space-between;
   }
 }
 </style>

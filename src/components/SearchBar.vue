@@ -224,7 +224,7 @@ li {
 }
 
 .suggestion-list-button:hover {
-  background: #ffffff;
+  background: #ffde90;
 }
 
 .search-bar {
@@ -265,7 +265,7 @@ li {
 }
 
 .search-icon {
-  color: #0d0d0d;
+  color: $plum;
   border: 0;
   padding: 8px;
   background: transparent;
@@ -276,7 +276,7 @@ li {
   background: transparent;
   border: 0;
   border-radius: 50%;
-  color: #0d0d0d;
+  color: $plum;
   padding: 8px;
   margin-left: 8px;
 }
@@ -302,7 +302,7 @@ body.screen--xs {
 
   .search-suggestions {
     top: unset;
-    bottom: 120px;
+    bottom: calc(16vw + 64px);
     width: 92vw;
   }
   // .search-bar {

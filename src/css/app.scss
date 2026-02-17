@@ -2,14 +2,14 @@
 @import url("https://fonts.googleapis.com/css2?family=Fugaz+One&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=block");
 @import url("https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=block");
 @import url("https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&display=block");
 
 body {
   background-color: $body-bg;
   overflow: hidden;
   font-family: "Sofia Sans", sans-serif;
   // color: #0d0d0d;
-  color: #62045f;
+  color: $plum;
 }
 
 h2 {
@@ -34,7 +34,7 @@ h2 {
   border-radius: 50%;
   width: 36px;
   height: 36px;
-  color: #0d0d0d;
+  color: $plum;
   padding: 0;
   transform: translateX(8px);
 
@@ -82,7 +82,7 @@ input:focus {
 
 input::placeholder {
   opacity: 0.5;
-  color: #0d0d0d;
+  color: $plum;
 }
 
 button.submit:focus {
@@ -102,7 +102,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
-  -webkit-text-fill-color: #060606 !important;
+  -webkit-text-fill-color: $plum !important;
 }
 
 .error-message {
