@@ -3,17 +3,19 @@
     <div class="search-wrapper">
       <SearchBar />
     </div>
+    <div></div>
 
     <div
-      class="logo-wrapper"
-      :class="$q.screen.gt.sm ? 'logo-wrapper-desktop' : 'logo-wrapper-mobile'"
+      class="temp-wrapper"
+      :class="$q.screen.gt.sm ? 'temp-wrapper-desktop' : 'temp-wrapper-mobile'"
     >
       <div :class="$q.screen.gt.sm ? 'logo' : 'logo-mobile'">
-        {{ weatherStore.currentTemp + "°" }}
+        {{ weatherStore.feelsLikeTemp + "°" }}
+        {{ weatherStore.windSpeed }}
       </div>
     </div>
 
-    <div v-if="!showAboutPopup" class="about-button-wrapper">
+    <!-- <div v-if="!showAboutPopup" class="about-button-wrapper">
       <button
         type="button"
         class="nav-btn"
@@ -23,9 +25,9 @@
         <template v-if="$q.screen.gt.sm">About</template
         ><i v-else class="pi pi-info-circle icon"></i>
       </button>
-    </div>
+    </div> -->
   </div>
-  <div ref="aboutPopupRef" class="about-popup">
+  <!-- <div ref="aboutPopupRef" class="about-popup">
     <template v-if="showAboutPopupText">
       <div class="close-wrapper">
         <button type="button" class="close-button flex-center" @click="handleCloseAboutPopup">
@@ -34,10 +36,10 @@
       </div>
       <div
         v-if="$q.screen.lt.md"
-        class="logo-wrapper"
-        :class="$q.screen.gt.xs ? 'logo-wrapper-desktop' : 'logo-wrapper-mobile'"
+        class="temp-wrapper"
+        :class="$q.screen.gt.xs ? 'temp-wrapper-desktop' : 'temp-wrapper-mobile'"
       >
-        <div :class="$q.screen.gt.sm ? 'logo-wrapper-desktop' : 'logo-wrapper-mobile'">
+        <div :class="$q.screen.gt.sm ? 'temp-wrapper-desktop' : 'temp-wrapper-mobile'">
           <div :class="$q.screen.gt.sm ? 'logo' : 'logo-mobile'">Nimbus</div>
         </div>
       </div>
@@ -46,7 +48,7 @@
         <p>{{ aboutText[1] }}</p>
       </div>
     </template>
-  </div>
+  </div> -->
 </template>
 
 <script setup>
@@ -88,7 +90,7 @@ onClickOutside(aboutPopupRef, () => {
 });
 
 function hideLogo() {
-  gsap.to(".logo-wrapper", {
+  gsap.to(".temp-wrapper", {
     duration: 0.2,
     opacity: 0,
     ease: "power2.out",
@@ -96,7 +98,7 @@ function hideLogo() {
 }
 
 function showLogo(delay) {
-  gsap.to(".logo-wrapper", {
+  gsap.to(".temp-wrapper", {
     duration: 0.2,
     opacity: 1,
     ease: "power2.out",
@@ -344,13 +346,13 @@ button.mobile {
   pointer-events: none;
 }
 
-.logo-wrapper-desktop {
+.temp-wrapper-desktop {
   transform: translateY(7px);
   display: flex;
   justify-content: center;
 }
 
-.logo-wrapper-mobile {
+.temp-wrapper-mobile {
   transform: translateY(4px);
   display: flex;
   justify-content: center;

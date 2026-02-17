@@ -41,7 +41,6 @@ let displayedStyle = null;
 let texturePaths = [];
 const x = ref(0);
 const y = ref(0);
-let windStrength = 0;
 
 const mapStyles = {
   placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z",
@@ -140,7 +139,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       gl.uniform1f(this.uTime, time);
       gl.uniform1f(this.uIntensity, 0.6);
       gl.uniform2f(this.uResolution, gl.canvas.width, gl.canvas.height);
-      gl.uniform1f(this.uWind, windStrength);
+      gl.uniform1f(this.uWind, weatherStore.windSpeed);
 
       this.textures.forEach((t, i) => {
         gl.activeTexture(gl.TEXTURE0 + t.unit);
@@ -179,10 +178,10 @@ async function setMapStyle() {
 
   if (!data) return;
 
-  weatherStore.setCurrentTemp(Math.round(data.main.temp));
-  weatherStore.setCurrentFeelsLikeTemp(Math.round(data.main.feels_like));
-  weatherStore.setCurrentLocation(data.name);
-  windStrength = data.wind.speed;
+  weatherStore.setAirTemp(Math.round(data.main.temp));
+  weatherStore.setFeelsLike(Math.round(data.main.feels_like));
+  weatherStore.setLocation(data.name);
+  weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
   console.log(data);
 
   let currentStyle;
