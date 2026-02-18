@@ -176,9 +176,10 @@ async function setMapStyle() {
 
   if (!data) return;
 
-  const weatherMain = data.weather[0].main;
-  const weatherDescription = data.weather[0].description;
-
+  // const weatherMain = data.weather[0].main;
+  // const weatherDescription = data.weather[0].description;
+  const weatherMain = "Clouds";
+  const weatherDescription = "broken clouds";
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
@@ -202,9 +203,6 @@ async function setMapStyle() {
   } else if (data.main.temp > 40) {
     currentStyle = "desert";
   }
-
-  // const weatherMain = "Clouds";
-  // const weatherDescription = "broken clouds";
 
   function setShader() {
     switch (weatherMain) {

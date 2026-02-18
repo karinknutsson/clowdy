@@ -32,18 +32,15 @@ void main() {
     // Cloud texture
     float cloud = texture(uTexture0, movingUv).r;
 
-    // Invert cloud texture
-    float invertedCloud = 1.0 - cloud;
-    invertedCloud = pow(invertedCloud, 2.0) * 1.5;
-
-    // Combine original and inverted textures
-    float combinedCloud = 1.0 - (cloud * invertedCloud);
+    // V curve cloud texture
+    float vCloud = abs((cloud - 0.5) * 2.0);
+    vCloud = mix(1.0, vCloud, 0.1);
 
     // Opacity for center view
-    float opacity = distance(uv, vec2(0.5)) * 1.5;
-    opacity = smoothstep(0.0, 0.7, opacity);
+    float opacity = pow(distance(uv, vec2(0.5)), 1.8)  * 2.6;
+    opacity = smoothstep(0.0, 0.5, opacity);
 
-    vec3 color = vec3(0.85, 0.86, 0.87);
+    vec3 color = vec3(1.0, 1.0, 1.0);
 
-    outColor = vec4(color * combinedCloud, opacity);
+    outColor = vec4(color * vCloud, opacity);
 }
