@@ -9,30 +9,18 @@ uniform sampler2D uTexture0;
 
 out vec4 outColor;
 
-vec2 rotateUv(vec2 uv, float angle, vec2 center) {
-    uv -= center;
-    float s = sin(angle);
-    float c = cos(angle);
-    uv = vec2(
-        uv.x * c - uv.y * s,
-        uv.x * s + uv.y * c
-    );
-    uv += center;
-    return uv;
-}
-
 void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
     // Set snow speed and create uv
-    vec2 speedFirstLayer = vec2(sin(uTime * 3.0) * 0.008 - uTime * 0.02, uTime * 0.1);
+    vec2 speedFirstLayer = vec2(sin(uTime * 3.0) * 0.008 - uTime * 0.02, uTime * 0.2);
     vec2 speedSecondLayer = vec2(- uTime * 0.1, uTime * 0.2);
-    vec2 speedThirdLayer = vec2(sin(uTime * 3.0) * 0.008, uTime * 0.05);
+    vec2 speedThirdLayer = vec2(sin(uTime * 5.0) * 0.008 - uTime * 0.01, uTime * 0.1);
 
     // Create moving uvs
-    vec2 movingUvFirstLayer = uv * 1.5 + speedFirstLayer;
-    vec2 movingUvSecondLayer = uv * 1.8 + speedSecondLayer;
-    vec2 movingUvThirdLayer = rotateUv(uv * 2.0, 3.14159265, vec2(0.5)) - speedThirdLayer;
+    vec2 movingUvFirstLayer = uv * 1.8 + speedFirstLayer;
+    vec2 movingUvSecondLayer = uv * 2.0 + speedSecondLayer;
+    vec2 movingUvThirdLayer = uv * 3.0 + speedThirdLayer;
 
     // Snow texture
     float snowFirstLayer = texture(uTexture0, movingUvFirstLayer).r;
