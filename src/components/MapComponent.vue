@@ -176,15 +176,18 @@ async function setMapStyle() {
 
   if (!data) return;
 
-  const weatherMain = data.weather[0].main;
-  const weatherDescription = data.weather[0].description;
+  // const weatherMain = data.weather[0].main;
+  // const weatherDescription = data.weather[0].description;
+
+  const weatherMain = "Clouds";
+  const weatherDescription = "overcast clouds";
 
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
   weatherStore.setLocation(data.name);
   weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
-  console.log(data);
+  // console.log(data);
 
   let currentStyle;
 
@@ -195,16 +198,12 @@ async function setMapStyle() {
   } else if (data.main.temp > 10 && data.main.temp <= 20) {
     currentStyle = "spring";
   } else if (data.main.temp > 20 && data.main.temp <= 30) {
-    console.log("summer");
     currentStyle = "summer";
   } else if (data.main.temp > 30 && data.main.temp <= 40) {
     currentStyle = "tropical";
   } else if (data.main.temp > 40) {
     currentStyle = "desert";
   }
-
-  // const weatherMain = "Clouds";
-  // const weatherDescription = "broken clouds";
 
   function setShader() {
     switch (weatherMain) {

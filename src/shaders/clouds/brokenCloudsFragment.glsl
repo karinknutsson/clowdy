@@ -30,12 +30,14 @@ void main() {
     // Invert cloud texture
     float invertedCloud = 1.0 - cloud;
     float invertedCloudFlipped = 1.0 - cloudFlipped;
-    float invertedCloudCombined = invertedCloud * invertedCloudFlipped;
+    float invertedCloudCombined = invertedCloud + invertedCloudFlipped;
+    invertedCloudCombined = smoothstep(0.0, 1.0, invertedCloudCombined);
     
-    float invertedCloudHighContrast = pow(invertedCloudCombined, 2.0);
-    invertedCloudHighContrast = smoothstep(0.0, 1.0, invertedCloudHighContrast);
+    // float invertedCloudHighContrast = pow(invertedCloudFlipped, 2.0);
+    // invertedCloudHighContrast = smoothstep(0.0, 1.0, invertedCloudHighContrast);
 
-    vec3 color = vec3(0.95, 0.96, 0.97);
+    // vec3 color = vec3(0.95, 0.96, 0.97);
+    vec3 color = vec3(1.0, 1.0, 1.0);
 
-    outColor = vec4(color * invertedCloudHighContrast, invertedCloudCombined);
+    outColor = vec4(color, invertedCloudCombined);
 }

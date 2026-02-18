@@ -40,10 +40,13 @@ void main() {
     float combinedCloud = 1.0 - (cloud * invertedCloud);
 
     // Opacity for center view
-    float opacity = distance(uv, vec2(0.5)) * 1.5;
-    opacity = smoothstep(0.0, 0.7, opacity);
+    float opacity = pow(distance(uv, vec2(0.5)), 3.0) * 15.0;
+    // float opacity = distance(uv, vec2(0.5)) * 1.5;
+    opacity = smoothstep(0.0, 1.0, opacity);
 
-    vec3 color = vec3(0.85, 0.86, 0.87);
+    // vec3 color = vec3(0.85, 0.86, 0.87);
+    // vec3 color = vec3(1.0, 0.0, 0.0);
+    vec3 color = vec3(1.0, 1.0, 1.0);
 
     outColor = vec4(color * combinedCloud, opacity);
 }
