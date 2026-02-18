@@ -3,9 +3,9 @@ import { defineStore, acceptHMRUpdate } from "pinia";
 
 export const useMapStore = defineStore("mapStore", {
   state: () => ({
-    lng: 13.407557,
-    lat: 52.509237,
-    zoom: 12,
+    lng: -92.90233378309256,
+    lat: 15.52248385029769,
+    zoom: 6,
   }),
   getters: {},
   actions: {
