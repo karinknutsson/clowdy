@@ -42,13 +42,13 @@ let displayedStyle = null;
 let texturePaths = [];
 
 const mapStyles = {
-  placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z",
+  placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z?fresh=true",
   winter: "mapbox://styles/karinmiriam/cmls357u9000601qz21wtbivh?fresh=true",
-  autumn: "mapbox://styles/karinmiriam/cml9fuw9f006c01sj5hqd6ytl",
-  spring: "mapbox://styles/karinmiriam/cml9h8dgz003f01r07i9h60bk",
-  summer: "mapbox://styles/karinmiriam/cmlrol2w7001m01qo4vvwb0di",
-  tropical: "mapbox://styles/karinmiriam/cml9hqmkw000t01s7frzh09k3",
-  desert: "mapbox://styles/karinmiriam/cml9hvfca003j01r0d3jjcbkg",
+  autumn: "mapbox://styles/karinmiriam/cml9fuw9f006c01sj5hqd6ytl?fresh=true",
+  spring: "mapbox://styles/karinmiriam/cml9h8dgz003f01r07i9h60bk?fresh=true",
+  summer: "mapbox://styles/karinmiriam/cmlrol2w7001m01qo4vvwb0di?fresh=true",
+  tropical: "mapbox://styles/karinmiriam/cml9hqmkw000t01s7frzh09k3?fresh=true",
+  desert: "mapbox://styles/karinmiriam/cml9hvfca003j01r0d3jjcbkg?fresh=true",
 };
 
 function removeLayerIfExists(layerId) {
