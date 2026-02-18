@@ -174,19 +174,6 @@ async function setMapStyle() {
 
   if (!data) return;
 
-  // const weatherMain = data.weather[0].main;
-  // const weatherDescription = data.weather[0].description;
-
-  const weatherMain = "Clouds";
-  const weatherDescription = "broken clouds";
-
-  weatherStore.setWeatherType(weatherMain);
-  weatherStore.setAirTemp(Math.round(data.main.temp));
-  weatherStore.setFeelsLike(Math.round(data.main.feels_like));
-  weatherStore.setLocation(data.name);
-  weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
-  // console.log(data);
-
   let currentStyle;
 
   if (data.main.temp <= 0) {
@@ -204,54 +191,29 @@ async function setMapStyle() {
   }
 
   function setShader() {
-    switch (weatherMain) {
-      // Atmospheric conditions
-      case "Fog":
-        addShaderLayer("fogLayer", vertexShader, fogFragmentShader);
-        break;
-      case "Mist":
-        addShaderLayer("mistLayer", vertexShader, mistFragmentShader);
-        break;
-      case "Dust":
-      case "Sand":
-        addShaderLayer("dustLayer", vertexShader, dustFragmentShader);
-        break;
-      case "Haze":
-        addShaderLayer("hazeLayer", vertexShader, hazeFragmentShader);
-        break;
-      case "Ash":
-        addShaderLayer("ashLayer", vertexShader, ashFragmentShader);
-        break;
-      case "Smoke":
-        addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
-        break;
+    let weatherMain = "";
 
-      // Clouds
-      case "Clouds":
-        if (weatherDescription.includes("overcast")) {
-          addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
-        } else if (weatherDescription.includes("broken")) {
-          addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
-        } else if (weatherDescription.includes("scattered")) {
-          addShaderLayer("scatteredCloudsLayer", vertexShader, scatteredCloudsFragmentShader);
-        } else {
-          addShaderLayer("fewCloudsLayer", vertexShader, fewCloudsFragmentShader);
-        }
-        break;
+    data.weather.forEach((weather, index) => {
+      if (index === 0) weatherMain = weather.main;
 
-      // Precipitation
-      case "Rain":
-        addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
-        break;
-      case "Drizzle":
-        addShaderLayer("drizzleLayer", vertexShader, drizzleFragmentShader);
-        break;
-
-      // Clear sky: no shader needed
-      default:
+      if (weather.main === "Clear") {
         removeLayerIfExists(currentLayerId);
-        break;
-    }
+      } else {
+        addShaderLayer("shaderLayer", vertexShader, fragmentShader);
+      }
+    });
+    // const weatherMain = data.weather[0].main;
+    // const weatherDescription = data.weather[0].description;
+
+    weatherMain = "Clouds";
+    const weatherDescription = "broken clouds";
+
+    weatherStore.setWeatherType(weatherMain);
+    weatherStore.setAirTemp(Math.round(data.main.temp));
+    weatherStore.setFeelsLike(Math.round(data.main.feels_like));
+    weatherStore.setLocation(data.name);
+    weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
+    // console.log(data);
   }
 
   if (currentStyle !== displayedStyle) {
