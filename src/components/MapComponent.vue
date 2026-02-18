@@ -174,7 +174,8 @@ async function setMapStyle() {
   if (!data) return;
 
   // const weatherMain = data.weather[0].main;
-  const weatherDescription = data.weather[0].description;
+  // const weatherDescription = data.weather[0].description;
+  const weatherDescription = "overcast clouds";
   const weatherMain = "Rain";
   // const weatherMain = "Snow";
 
@@ -246,7 +247,7 @@ async function setMapStyle() {
       // Precipitation
       case "Rain":
         texturePaths = [
-          // "./noise-textures/Milky6-512x512.png",
+          "./noise-textures/Milky6-512x512.png",
           "./noise-textures/Perlin24-512x512.png",
         ];
         addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
