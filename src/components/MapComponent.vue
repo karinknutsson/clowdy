@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import { useQuasar } from "quasar";
 import { useSearchStore } from "src/stores/search-store";
@@ -11,6 +11,7 @@ import { useMapStore } from "src/stores/map-store";
 import { useWeatherStore } from "src/stores/weather-store";
 
 import vertexShader from "src/shaders/vertex.glsl?raw";
+import fragmentShader from "src/shaders/fragment.glsl?raw";
 
 import fogFragmentShader from "src/shaders/atmosphere/fogFragment.glsl?raw";
 import mistFragmentShader from "src/shaders/atmosphere/mistFragment.glsl?raw";
@@ -38,7 +39,12 @@ let map;
 const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
 let currentLayerId = null;
 let displayedStyle = null;
-let texturePaths = [];
+const texturePaths = [
+  { name: "uAshTexture", path: "./noise-textures/Perlin23-512x512.png" },
+  { name: "uCloudTexture", path: "./noise-textures/Milky6-512x512.png" },
+  { name: "uSmokeTexture", path: "./noise-textures/SuperPerlin2-512x512.png" },
+  { name: "uRainTexture", path: "./noise-textures/Perlin24-512x512.png" },
+];
 const x = ref(0);
 const y = ref(0);
 
@@ -80,21 +86,13 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       this.uTime = gl.getUniformLocation(this.program, "uTime");
       this.uWind = gl.getUniformLocation(this.program, "uWind");
 
-      // Set texture uniforms if needed
-      if (texturePaths.length) {
-        for (let i = 0; i < texturePaths.length; i++) {
-          this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${i}`));
-        }
-      }
+      // Set texture uniforms and load textures
+      texturePaths.forEach((texturePath) => {
+        this.textureUniforms.push(gl.getUniformLocation(this.program, texturePath.name));
+        this.addTexture(gl, texturePath.path);
+      });
 
       this.buffer = createFullscreenQuad(gl);
-
-      // Load textures if needed
-      if (texturePaths.length) {
-        texturePaths.forEach((path, index) => {
-          this.addTexture(gl, path);
-        });
-      }
     },
 
     addTexture(gl, path) {
@@ -209,34 +207,27 @@ async function setMapStyle() {
     switch (weatherMain) {
       // Atmospheric conditions
       case "Fog":
-        texturePaths = [];
         addShaderLayer("fogLayer", vertexShader, fogFragmentShader);
         break;
       case "Mist":
-        texturePaths = [];
         addShaderLayer("mistLayer", vertexShader, mistFragmentShader);
         break;
       case "Dust":
       case "Sand":
-        texturePaths = [];
         addShaderLayer("dustLayer", vertexShader, dustFragmentShader);
         break;
       case "Haze":
-        texturePaths = [];
         addShaderLayer("hazeLayer", vertexShader, hazeFragmentShader);
         break;
       case "Ash":
-        texturePaths = ["./noise-textures/Perlin23-512x512.png"];
         addShaderLayer("ashLayer", vertexShader, ashFragmentShader);
         break;
       case "Smoke":
-        texturePaths = ["./noise-textures/SuperPerlin2-512x512.png"];
         addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
         break;
 
       // Clouds
       case "Clouds":
-        texturePaths = ["./noise-textures/Milky6-512x512.png"];
         if (weatherDescription.includes("overcast")) {
           addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
         } else if (weatherDescription.includes("broken")) {
@@ -250,17 +241,9 @@ async function setMapStyle() {
 
       // Precipitation
       case "Rain":
-        texturePaths = [
-          "./noise-textures/Milky6-512x512.png",
-          "./noise-textures/Perlin24-512x512.png",
-        ];
         addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
         break;
       case "Drizzle":
-        texturePaths = [
-          "./noise-textures/Milky6-512x512.png",
-          "./noise-textures/Perlin24-512x512.png",
-        ];
         addShaderLayer("drizzleLayer", vertexShader, drizzleFragmentShader);
         break;
 

@@ -2,8 +2,8 @@
 
 precision mediump float;
 
-uniform vec2 uResolution;
 uniform float uTime;
+uniform vec2 uResolution;
 uniform float uWind;
 uniform vec2 uColor;
 uniform sampler2D uCloudTexture;
