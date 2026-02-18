@@ -42,7 +42,7 @@ void main() {
     float invertedCloud = 1.0 - cloud;
     invertedCloud = pow(invertedCloud, 2.0) * 1.5;
 
+    // Set color
     vec3 color = vec3(1.0, 1.0, 1.0);
-
     outColor = vec4(color, invertedCloud);
 }

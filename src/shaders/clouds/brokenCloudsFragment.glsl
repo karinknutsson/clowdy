@@ -36,6 +36,7 @@ void main() {
     movingUv = rotateUv(movingUv, rotation, vec2(0.5));
     movingUvFlipped = rotateUv(movingUvFlipped, rotation + 3.14159265, vec2(0.5));
 
+    // Cloud textures
     float cloud = texture(uTexture0, movingUv).r;
     float cloudFlipped =  texture(uTexture0, movingUvFlipped).r;
     float cloudCombined = cloud * cloudFlipped;
@@ -44,7 +45,7 @@ void main() {
     float invertedCloud = 1.0 - cloudCombined;
     invertedCloud = pow(invertedCloud, 2.0) * 1.5;
 
+    // Set color
     vec3 color = vec3(1.0, 1.0, 1.0);
-
     outColor = vec4(color, invertedCloud);
 }
