@@ -27,6 +27,8 @@ import fewCloudsFragmentShader from "src/shaders/clouds/fewCloudsFragment.glsl?r
 import rainFragmentShader from "src/shaders/rain/rainFragment.glsl?raw";
 import drizzleFragmentShader from "src/shaders/rain/drizzleFragment.glsl?raw";
 
+import snowFragmentShader from "src/shaders/snow/snowFragment.glsl?raw";
+
 import { createProgram, createFullscreenQuad } from "src/utils/shader-helpers";
 
 const $q = useQuasar();
@@ -177,9 +179,9 @@ async function setMapStyle() {
   if (!data) return;
 
   // const weatherMain = data.weather[0].main;
-  // const weatherDescription = data.weather[0].description;
-  const weatherMain = "Rain";
-  const weatherDescription = "broken clouds";
+  const weatherDescription = data.weather[0].description;
+  const weatherMain = "Snow";
+
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
@@ -259,6 +261,14 @@ async function setMapStyle() {
           "./noise-textures/Perlin24-512x512.png",
         ];
         addShaderLayer("drizzleLayer", vertexShader, drizzleFragmentShader);
+        break;
+      case "Snow":
+        texturePaths = [
+          "./noise-textures/Milky6-512x512.png",
+          "./noise-textures/Perlin24-512x512.png",
+          "./noise-textures/SuperPerlin5-512x512.png",
+        ];
+        addShaderLayer("snowLayer", vertexShader, snowFragmentShader);
         break;
 
       // Clear sky: no shader needed
