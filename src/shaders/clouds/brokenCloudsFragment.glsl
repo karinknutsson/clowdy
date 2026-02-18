@@ -32,12 +32,17 @@ void main() {
     float invertedCloudFlipped = 1.0 - cloudFlipped;
     float invertedCloudCombined = invertedCloud + invertedCloudFlipped;
     invertedCloudCombined = smoothstep(0.0, 1.0, invertedCloudCombined);
+
+        // V curve cloud texture
+    float vCloud = abs((invertedCloudCombined - 0.5) * 2.0);
+    vCloud = mix(1.0, vCloud, 0.1);
     
     // float invertedCloudHighContrast = pow(invertedCloudFlipped, 2.0);
     // invertedCloudHighContrast = smoothstep(0.0, 1.0, invertedCloudHighContrast);
 
     // vec3 color = vec3(0.95, 0.96, 0.97);
-    vec3 color = vec3(1.0, 1.0, 1.0);
+    // vec3 color = vec3(1.0, 1.0, 1.0);
+    vec3 color = vec3(1.0, 0.0, 0.0);
 
     outColor = vec4(color, invertedCloudCombined);
 }

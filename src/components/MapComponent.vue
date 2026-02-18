@@ -180,7 +180,7 @@ async function setMapStyle() {
   // const weatherDescription = data.weather[0].description;
 
   const weatherMain = "Clouds";
-  const weatherDescription = "overcast clouds";
+  const weatherDescription = "broken clouds";
 
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
