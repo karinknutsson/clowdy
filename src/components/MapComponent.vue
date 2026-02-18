@@ -3,7 +3,7 @@
 </template>
 
 <script setup>
-import { computed, onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import { useQuasar } from "quasar";
 import { useSearchStore } from "src/stores/search-store";
@@ -31,7 +31,6 @@ import snowFragmentShader from "src/shaders/snow/snowFragment.glsl?raw";
 
 import { createProgram, createFullscreenQuad } from "src/utils/shader-helpers";
 
-const $q = useQuasar();
 const searchStore = useSearchStore();
 const mapStore = useMapStore();
 const weatherStore = useWeatherStore();
@@ -41,8 +40,6 @@ const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
 let currentLayerId = null;
 let displayedStyle = null;
 let texturePaths = [];
-const x = ref(0);
-const y = ref(0);
 
 const mapStyles = {
   placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z",
@@ -266,7 +263,6 @@ async function setMapStyle() {
         texturePaths = [
           "./noise-textures/Milky6-512x512.png",
           "./noise-textures/Perlin24-512x512.png",
-          "./noise-textures/SuperPerlin5-512x512.png",
         ];
         addShaderLayer("snowLayer", vertexShader, snowFragmentShader);
         break;

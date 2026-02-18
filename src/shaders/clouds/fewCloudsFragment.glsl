@@ -33,7 +33,6 @@ void main() {
     // Create moving uv
     vec2 movingUv = uv + speed * uTime;
     movingUv = rotateUv(movingUv, rotation, vec2(0.5));
-    movingUv = fract(movingUv);
 
     // Cloud texture
     float cloud = texture(uTexture0, movingUv).r;
