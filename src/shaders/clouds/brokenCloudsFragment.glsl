@@ -24,12 +24,17 @@ vec2 rotateUv(vec2 uv, float angle, vec2 center) {
 void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
+    // Set speed and rotation based on time and wind
     vec2 speed = vec2(0.002, 0.001);
+    speed *= uWind * 0.5;
+    float rotation = uTime * 0.003;
+    rotation *= uWind * 0.5;
+
+    // Create moving uvs
     vec2 movingUv = uv + speed * uTime;
     vec2 movingUvFlipped = uv + speed * uTime;
-
-    movingUv = rotateUv(movingUv, uTime * 0.003, vec2(0.5));
-    movingUvFlipped = rotateUv(movingUvFlipped, uTime * 0.003 + 3.14159265, vec2(0.5));
+    movingUv = rotateUv(movingUv, rotation, vec2(0.5));
+    movingUvFlipped = rotateUv(movingUvFlipped, rotation + 3.14159265, vec2(0.5));
 
     float cloud = texture(uTexture0, movingUv).r;
     float cloudFlipped =  texture(uTexture0, movingUvFlipped).r;

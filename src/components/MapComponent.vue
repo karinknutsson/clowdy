@@ -185,7 +185,7 @@ async function setMapStyle() {
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
   weatherStore.setLocation(data.name);
   weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
-  console.log(data);
+  console.log(weatherStore.windSpeed);
 
   let currentStyle;
 
