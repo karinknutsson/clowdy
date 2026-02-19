@@ -44,7 +44,7 @@ const weatherStore = useWeatherStore();
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  padding: 2% 4% 16% 4%;
+  padding: 6% 4% 12% 4%;
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;
