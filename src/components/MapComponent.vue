@@ -396,8 +396,6 @@ watch(
         essential: true,
       });
 
-      console.log("Coordinates updated:", lng, lat);
-
       setMapStyle();
     }
   },
