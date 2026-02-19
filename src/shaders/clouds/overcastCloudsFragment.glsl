@@ -35,17 +35,16 @@ void main() {
     movingUv = rotateUv(movingUv, rotation, vec2(0.5));
 
     // Cloud texture
-    float cloud = texture(uTexture0, movingUv).r;
+    // float stillCloud = texture(uTexture0, vec2(uv.x + 0.6, uv.y - 0.6) * 0.9).r;
+    float stillCloud = texture(uTexture0, vec2(uv.x + 2.05, uv.y + 0.45) * 0.3).r;
+    stillCloud = smoothstep(0.3, 1.0, stillCloud);
+    float movingCloud = texture(uTexture0, movingUv).r;
 
     // V curve cloud texture
-    float vCloud = abs((cloud - 0.5) * 2.0);
-    vCloud = mix(1.0, vCloud, 0.1);
-
-    // Opacity for center view
-    // float opacity = pow(distance(uv, vec2(0.5)), 1.8)  * 2.6;
-    // opacity = smoothstep(0.0, 0.5, opacity);
+    float vCurveCloud = abs((movingCloud - 0.5) * 2.0);
+    vCurveCloud = mix(1.0, vCurveCloud, 0.1);
 
     // Set color
     vec3 color = vec3(1.0, 1.0, 1.0);
-    outColor = vec4(color * vCloud, 1.0);
+    outColor = vec4(color * vCurveCloud, stillCloud);
 }
