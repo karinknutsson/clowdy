@@ -25,7 +25,7 @@ void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
     // Set speed and rotation based on time and wind
-    vec2 speed = vec2(0.002, 0.001);
+    vec2 speed = vec2(-0.002, -0.001);
     speed *= uWind * 0.25;
     float rotation = uTime * 0.003;
     rotation *= uWind * 0.25;
@@ -40,6 +40,7 @@ void main() {
     // Invert cloud texture
     float invertedCloud = 1.0 - cloud;
     invertedCloud = pow(invertedCloud, 2.0) * 1.5;
+    invertedCloud = clamp(invertedCloud, 0.0, 0.8);
 
     // Set color
     vec3 color = vec3(1.0, 1.0, 1.0);

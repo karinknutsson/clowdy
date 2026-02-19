@@ -25,10 +25,10 @@ void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
     // Set speed and rotation based on time and wind
-    vec2 speed = vec2(0.002, 0.001);
-    speed *= uWind * 0.5;
+    vec2 speed = vec2(-0.002, -0.001);
+    speed *= uWind * 0.25;
     float rotation = uTime * 0.003;
-    rotation *= uWind * 0.5;
+    rotation *= uWind * 0.25;
 
     // Create uv
     vec2 movingUv = uv + speed * uTime;
