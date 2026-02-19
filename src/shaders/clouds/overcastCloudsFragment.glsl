@@ -25,7 +25,7 @@ void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
     // Set speed and rotation based on time and wind
-    vec2 speed = vec2(0.002, 0.001);
+    vec2 speed = vec2(-0.002, -0.001);
     speed *= uWind * 0.25;
     float rotation = uTime * 0.003;
     rotation *= uWind * 0.25;
@@ -42,10 +42,10 @@ void main() {
     vCloud = mix(1.0, vCloud, 0.1);
 
     // Opacity for center view
-    float opacity = pow(distance(uv, vec2(0.5)), 1.8)  * 2.6;
-    opacity = smoothstep(0.0, 0.5, opacity);
+    // float opacity = pow(distance(uv, vec2(0.5)), 1.8)  * 2.6;
+    // opacity = smoothstep(0.0, 0.5, opacity);
 
     // Set color
     vec3 color = vec3(1.0, 1.0, 1.0);
-    outColor = vec4(color * vCloud, opacity);
+    outColor = vec4(color * vCloud, 1.0);
 }
