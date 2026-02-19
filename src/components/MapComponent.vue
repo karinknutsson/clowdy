@@ -173,17 +173,16 @@ async function setMapStyle() {
 
   if (!data) return;
 
-  // const weatherMain = data.weather[0].main;
+  const weatherMain = data.weather[0].main;
   const weatherDescription = data.weather[0].description;
   // const weatherMain = "Thunderstorm";
-  const weatherMain = "Drizzle";
 
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
   weatherStore.setLocation(data.name);
-  // weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
-  weatherStore.setWindSpeed(10);
+  weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
+  // weatherStore.setWindSpeed(10);
 
   let currentStyle;
 
