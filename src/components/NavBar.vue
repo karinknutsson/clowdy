@@ -1,8 +1,8 @@
 <template>
   <div class="nav-container">
     <div class="temp-container glass-card">
-      <div class="weather-description-wrapper-wrapper">
-        <div class="weather-description-wrapper">
+      <div class="weather-description-container">
+        <div class="weather-description-wrapper weather-main">
           {{ weatherStore.weatherType ? weatherStore.weatherType : "&nbsp;" }}
         </div>
         <div class="weather-description-wrapper">
@@ -61,7 +61,7 @@ const weatherStore = useWeatherStore();
   padding: 20px 24px;
 }
 
-.weather-description-wrapper-wrapper {
+.weather-description-container {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -70,14 +70,14 @@ const weatherStore = useWeatherStore();
 .feels-like-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   height: 100%;
 }
 
 .feels-like-wrapper {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .feels-like-temp-wrapper {
@@ -89,7 +89,11 @@ const weatherStore = useWeatherStore();
 
 .weather-description-wrapper {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
+}
+
+.weather-main {
+  font-weight: 800;
 }
 
 body.screen--sm,
