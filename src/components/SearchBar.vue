@@ -293,7 +293,7 @@ body.screen--xs {
 
   .search-suggestions {
     top: unset;
-    bottom: calc(16vw + 64px);
+    bottom: calc(12vw + 64px);
     width: 92vw;
   }
 }
