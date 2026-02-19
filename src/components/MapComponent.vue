@@ -182,6 +182,7 @@ async function setMapStyle() {
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
   weatherStore.setLocation(data.name);
   weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
+  // weatherStore.setWindSpeed(10);
 
   let currentStyle;
 
@@ -244,17 +245,11 @@ async function setMapStyle() {
 
       // Precipitation
       case "Rain":
-        texturePaths = [
-          "./noise-textures/Milky6-512x512.png",
-          "./noise-textures/Perlin24-512x512.png",
-        ];
+        texturePaths = [];
         addShaderLayer("rainLayer", vertexShader, rainFragmentShader);
         break;
       case "Drizzle":
-        texturePaths = [
-          "./noise-textures/Milky6-512x512.png",
-          "./noise-textures/Perlin24-512x512.png",
-        ];
+        texturePaths = [];
         addShaderLayer("drizzleLayer", vertexShader, drizzleFragmentShader);
         break;
       case "Snow":
