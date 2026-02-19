@@ -28,7 +28,7 @@
     </form>
   </div>
 
-  <div v-if="searchStore.suggestions.length" class="search-suggestions">
+  <div v-if="searchStore.suggestions.length" class="search-suggestions glass-card">
     <ul>
       <li v-for="suggestion in searchStore.suggestions">
         <button class="suggestion-list-button" @click="onSelectSuggestion(suggestion)">
@@ -184,7 +184,6 @@ ul {
   margin: 0;
   padding: 8px 0;
   width: 100%;
-  // width: v-bind(searchBarFullWidth);
 }
 
 li {
@@ -207,10 +206,6 @@ li {
   color: inherit;
 }
 
-.suggestion-list-button:hover {
-  background: $background;
-}
-
 .search-bar {
   pointer-events: auto;
   width: 196px;
@@ -231,8 +226,6 @@ li {
   z-index: 5002;
   top: 96px;
   left: 4vw;
-  background: $background;
-  border-radius: 8px;
   width: v-bind(searchBarFullWidth);
 }
 
