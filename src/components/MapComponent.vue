@@ -392,9 +392,11 @@ watch(
 
       map.flyTo({
         center: [lng, lat],
-        zoom: 14,
+        zoom: 10,
         essential: true,
       });
+
+      console.log("Coordinates updated:", lng, lat);
 
       setMapStyle();
     }
