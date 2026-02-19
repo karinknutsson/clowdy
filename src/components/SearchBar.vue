@@ -197,7 +197,7 @@ watch(
 ul {
   list-style-type: none;
   margin: 0;
-  padding: 8px 0;
+  padding: 16px 0;
   width: 100%;
 }
 
@@ -219,6 +219,7 @@ li {
   font-size: 14px;
   padding: 8px;
   color: inherit;
+  border-radius: 12px;
 }
 
 .search-bar {

@@ -412,7 +412,7 @@ watch(
 }
 
 :deep(a) {
-  color: $font-color;
+  color: $charcoal;
   text-decoration: none;
   font-size: 8px;
 }
