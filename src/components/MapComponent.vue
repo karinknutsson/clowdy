@@ -252,9 +252,9 @@ async function setMapStyle() {
 
   clearInterval(lightningInterval);
 
-  // const weatherMain = data.weather[0].main;
+  const weatherMain = data.weather[0].main;
   const weatherDescription = data.weather[0].description;
-  const weatherMain = "Thunderstorm";
+  // const weatherMain = "Thunderstorm";
 
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
