@@ -25,11 +25,11 @@ float random (vec2 st) {
         43758.5453123);
 }
 
-float createRainLayer(vec2 uv, float timeFactor, float textureSize) {
-    vec2 gridUv = vec2(uv.x * textureSize, floor((uv.y + timeFactor * uTime) * 10.0 + random(uv)) / 10.0 * textureSize);
+float createRainLayer(vec2 uv, float timeFactor, float textureSize, float opacity) {
+    vec2 gridUv = vec2(uv.x, floor((uv.y + timeFactor * uTime) * textureSize + random(uv)) / textureSize);
 
     float rain = random(gridUv);
-    rain = smoothstep(0.8, 1.4, rain); 
+    rain = smoothstep(0.9, 1.3, rain) * opacity; 
     return rain;
 }
 
@@ -37,9 +37,13 @@ void main() {
     vec2 uv = gl_FragCoord.xy / uResolution;
 
     // Create rain layers
-    float rainFirstLayer = createRainLayer(uv, 0.3, 1.0);
-    float rainSecondLayer = createRainLayer(uv, 0.2, 1.4);
-    float rain = rainFirstLayer;
+    float rainFirstLayer = createRainLayer(uv, 0.3, 10.0, 0.8);
+    float rainSecondLayer = createRainLayer(uv, 0.2, 20.0, 0.6);
+    float rainThirdLayer = createRainLayer(uv, 0.1, 30.0, 0.4);
+    float rain = rainFirstLayer + rainSecondLayer + rainThirdLayer;
+    // rain = rainSecondLayer;
+    // rain = rainFirstLayer;
+    // rain = rainThirdLayer;
 
     // Set color
     vec3 color = vec3(1.0, 1.0, 1.0);
