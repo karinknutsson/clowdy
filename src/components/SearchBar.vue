@@ -35,9 +35,10 @@
           <div class="suggestion-header">
             <h3>{{ suggestion.name }}</h3>
           </div>
-          <div v-if="suggestion.address">{{ suggestion.address }}</div>
+          <div v-if="suggestion.address">
+            {{ suggestion.address }} ({{ (suggestion.distance / 1000).toFixed(2) }} km)
+          </div>
           <div v-else>{{ suggestion.place_formatted }}</div>
-          <div v-if="suggestion.distance">{{ (suggestion.distance / 1000).toFixed(2) }} km</div>
         </button>
       </li>
     </ul>
@@ -216,8 +217,8 @@ li {
   align-items: flex-start;
   border: 0;
   background: transparent;
-  font-size: 14px;
-  padding: 8px;
+  font-size: 0.8rem;
+  padding: 6px 8px;
   color: inherit;
   border-radius: 12px;
 }
@@ -279,9 +280,10 @@ i {
 .suggestion-header {
   h3 {
     font-weight: 700;
-    font-size: 14px;
+    font-size: 0.9rem;
     margin: 0;
     line-height: 120%;
+    text-align: left;
   }
 }
 
