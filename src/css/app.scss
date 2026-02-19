@@ -5,7 +5,7 @@ body {
   background-color: $body-bg;
   overflow: hidden;
   font-family: "Sofia Sans", sans-serif;
-  color: $primary;
+  color: $charcoal;
 }
 
 h2 {
@@ -26,7 +26,7 @@ h2 {
   border-radius: 50%;
   width: 36px;
   height: 36px;
-  color: $primary;
+  color: $charcoal;
   padding: 0;
   transform: translateX(8px);
 
@@ -73,7 +73,7 @@ input:focus {
 
 input::placeholder {
   opacity: 0.5;
-  color: $primary;
+  color: $charcoal;
 }
 
 button.submit:focus {
@@ -93,7 +93,7 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s;
-  -webkit-text-fill-color: $primary !important;
+  -webkit-text-fill-color: $charcoal !important;
 }
 
 .error-message {

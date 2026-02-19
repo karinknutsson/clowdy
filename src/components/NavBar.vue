@@ -1,6 +1,6 @@
 <template>
   <div class="nav-container">
-    <div class="temp-container">
+    <div class="temp-container weather-card">
       <div class="weather-description-wrapper-wrapper">
         <div class="weather-description-wrapper">
           {{ weatherStore.weatherType ? weatherStore.weatherType : "&nbsp;" }}
@@ -57,10 +57,25 @@ const weatherStore = useWeatherStore();
   align-items: flex-start;
   justify-content: flex-start;
   gap: 64px;
-  background: $secondary;
-  border-radius: 8px;
+  // background: $background;
+  border-radius: 16px;
   pointer-events: auto;
   padding: 16px;
+}
+
+.weather-card {
+  background: rgba(242, 243, 248, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
+  border-radius: 20px;
+  padding: 20px 24px;
+
+  border: 1px solid rgba(255, 255, 255, 0.6);
+
+  box-shadow:
+    0 10px 30px rgba(20, 25, 40, 0.08),
+    0 2px 8px rgba(20, 25, 40, 0.05);
 }
 
 .weather-description-wrapper-wrapper {
@@ -79,24 +94,19 @@ const weatherStore = useWeatherStore();
 
 .feels-like-wrapper {
   font-size: 1.2rem;
-  font-weight: 900;
+  font-weight: 700;
 }
 
 .feels-like-temp-wrapper {
   font-size: 3.4rem;
   font-weight: 900;
   line-height: 3.2rem;
-  // border: 1px dotted red;
+  color: $primary;
 }
 
 .weather-description-wrapper {
   font-size: 1rem;
-  font-weight: 900;
-}
-
-.search-wrapper {
-  // align-self: flex-start;
-  // border: 1px dotted white;
+  font-weight: 700;
 }
 
 body.screen--sm,

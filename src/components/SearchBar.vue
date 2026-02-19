@@ -208,12 +208,12 @@ li {
 }
 
 .suggestion-list-button:hover {
-  background: $secondary;
+  background: $background;
 }
 
 .search-bar {
   pointer-events: auto;
-  background: $secondary;
+  background: $background;
   border-radius: 8px;
   width: 196px;
   height: 56px;
@@ -233,7 +233,7 @@ li {
   z-index: 5002;
   top: 96px;
   left: 4vw;
-  background: $secondary;
+  background: $background;
   border-radius: 8px;
   width: v-bind(searchBarFullWidth);
 }
@@ -249,7 +249,7 @@ li {
 }
 
 .search-icon {
-  color: $primary;
+  color: $charcoal;
   border: 0;
   padding: 8px;
   background: transparent;
@@ -260,7 +260,7 @@ li {
   background: transparent;
   border: 0;
   border-radius: 50%;
-  color: $primary;
+  color: $charcoal;
   padding: 8px;
   margin-left: 8px;
 }
