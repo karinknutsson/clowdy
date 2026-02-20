@@ -120,7 +120,7 @@ function flash() {
 }
 
 const mapStyles = {
-  placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z?fresh=true",
+  night: "mapbox://styles/karinmiriam/cmlur55uh003o01sd830t990c?fresh=true",
   winter: "mapbox://styles/karinmiriam/cmls357u9000601qz21wtbivh?fresh=true",
   autumn: "mapbox://styles/karinmiriam/cml9fuw9f006c01sj5hqd6ytl?fresh=true",
   spring: "mapbox://styles/karinmiriam/cmluqyq74000801sog67y0wrm?fresh=true",
@@ -253,12 +253,16 @@ async function setMapStyle() {
 
   clearInterval(lightningInterval);
 
-  console.log(data);
-
   const weatherMain = data.weather[0].main;
   const weatherDescription = data.weather[0].description;
 
-  weatherStore.setWeatherType(weatherMain, data.sys.sunrise, data.sys.sunset);
+  const now = data.dt;
+  const sunrise = data.sys.sunrise;
+  const sunset = data.sys.sunset;
+
+  const isDay = now >= sunrise && now < sunset;
+
+  weatherStore.setWeatherType(weatherMain, isDay);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
   weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
@@ -266,7 +270,9 @@ async function setMapStyle() {
   let currentStyle;
 
   // Map styles based on temperature ranges
-  if (data.main.temp <= 0) {
+  if (!isDay) {
+    currentStyle = "night";
+  } else if (data.main.temp <= 0) {
     currentStyle = "winter";
   } else if (data.main.temp > 0 && data.main.temp <= 10) {
     currentStyle = "autumn";
