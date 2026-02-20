@@ -8,21 +8,9 @@ in vec2 vRotatingUv;
 
 out vec4 outColor;
 
-vec2 rotateUv(vec2 uv, float angle, vec2 center) {
-    uv -= center;
-    float s = sin(angle);
-    float c = cos(angle);
-    uv = vec2(
-        uv.x * c - uv.y * s,
-        uv.x * s + uv.y * c
-    );
-    uv += center;
-    return uv;
-}
-
 void main() {
     // Create flipped uv
-    vec2 vRotatingUvFlipped = rotateUv(vRotatingUv, 3.14159265, vec2(0.5));
+    vec2 vRotatingUvFlipped = 1.0 - vRotatingUv;
 
     // Cloud textures
     float cloud = texture(uTexture0, vRotatingUv).r;
