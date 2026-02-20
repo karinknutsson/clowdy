@@ -14,8 +14,14 @@ export const useWeatherStore = defineStore("weatherStore", {
   }),
   getters: {},
   actions: {
-    setWeatherType(type) {
-      this.weatherType = type;
+    setWeatherType(type, sunriseTime, sunsetTime) {
+      const date = Date.now() / 1000;
+
+      if (type === "Clear" && date > sunriseTime && date < sunsetTime) {
+        this.weatherType = "Sunny";
+      } else {
+        this.weatherType = type;
+      }
     },
 
     setAirTemp(temp) {

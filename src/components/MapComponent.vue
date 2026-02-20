@@ -253,13 +253,14 @@ async function setMapStyle() {
 
   clearInterval(lightningInterval);
 
+  console.log(data);
+
   const weatherMain = data.weather[0].main;
   const weatherDescription = data.weather[0].description;
 
-  weatherStore.setWeatherType(weatherMain);
+  weatherStore.setWeatherType(weatherMain, data.sys.sunrise, data.sys.sunset);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
-  weatherStore.setLocation(data.name);
   weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
 
   let currentStyle;
