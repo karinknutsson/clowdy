@@ -3,6 +3,7 @@
 precision mediump float;
 
 uniform sampler2D uTexture0;
+uniform vec3 uColor;
 
 in vec2 vRotatingUv;
 

@@ -3,6 +3,7 @@
 precision mediump float;
 
 uniform sampler2D uTexture0;
+uniform vec3 uColor;
 
 in vec2 vUv;
 in vec2 vRotatingUv;
@@ -20,6 +21,7 @@ void main() {
     vCurveCloud = mix(1.0, vCurveCloud, 0.1);
 
     // Set color
-    vec3 color = vec3(1.0, 1.0, 1.0);
+    // vec3 color = vec3(1.0, 1.0, 1.0);
+    vec3 color = vec3(0.29, 0.28, 0.3);
     outColor = vec4(color * vCurveCloud, stillCloud);
 }

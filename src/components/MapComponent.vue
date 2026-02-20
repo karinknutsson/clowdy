@@ -154,22 +154,17 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       this.uResolution = gl.getUniformLocation(this.program, "uResolution");
       this.uTime = gl.getUniformLocation(this.program, "uTime");
       this.uWind = gl.getUniformLocation(this.program, "uWind");
+      this.uColor = gl.getUniformLocation(this.program, "uColor");
+      this.uCloudClamp = gl.getUniformLocation(this.program, "uCloudClamp");
 
-      // Set texture uniforms if needed
-      if (texturePaths.length) {
-        for (let i = 0; i < texturePaths.length; i++) {
-          this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${i}`));
-        }
-      }
+      // Set texture uniforms and load textures if needed
+
+      texturePaths.forEach((path, index) => {
+        this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${index}`));
+        this.addTexture(gl, path);
+      });
 
       this.buffer = createFullscreenQuad(gl);
-
-      // Load textures if needed
-      if (texturePaths.length) {
-        texturePaths.forEach((path, index) => {
-          this.addTexture(gl, path);
-        });
-      }
     },
 
     addTexture(gl, path) {
