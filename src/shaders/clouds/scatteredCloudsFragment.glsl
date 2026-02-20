@@ -4,6 +4,7 @@ precision mediump float;
 
 uniform sampler2D uTexture0;
 uniform vec3 uColor;
+uniform float uCloudClamp;
 
 in vec2 vRotatingUv;
 
@@ -16,9 +17,8 @@ void main() {
     // Invert cloud texture
     float invertedCloud = 1.0 - cloud;
     invertedCloud = pow(invertedCloud, 2.0) * 1.5;
-    invertedCloud = clamp(invertedCloud, 0.0, 0.8);
+    invertedCloud = clamp(invertedCloud, 0.0, uCloudClamp);
 
     // Set color
-    vec3 color = vec3(1.0, 1.0, 1.0);
-    outColor = vec4(color, invertedCloud);
+    outColor = vec4(uColor, invertedCloud);
 }

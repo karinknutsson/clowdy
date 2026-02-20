@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import { useSearchStore } from "src/stores/search-store";
 import { useMapStore } from "src/stores/map-store";
@@ -44,6 +44,13 @@ let displayedStyle = null;
 let texturePaths = [];
 let startTime = performance.now();
 let lightningInterval = null;
+let isDay = ref(true);
+
+const cloudColor = computed(() =>
+  isDay.value ? { r: 1.0, g: 1.0, b: 1.0 } : { r: 0.29, g: 0.28, b: 0.3 },
+);
+
+const cloudClamp = computed(() => (isDay.value ? 0.8 : 1.0));
 
 function flash() {
   let delay = 0;
@@ -158,16 +165,17 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       this.uCloudClamp = gl.getUniformLocation(this.program, "uCloudClamp");
 
       // Set texture uniforms and load textures if needed
-
       texturePaths.forEach((path, index) => {
         this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${index}`));
         this.addTexture(gl, path);
       });
 
+      // Create fullscreen quad
       this.buffer = createFullscreenQuad(gl);
     },
 
     addTexture(gl, path) {
+      // Create texture and bind it to a texture unit
       const texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -184,6 +192,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
         new Uint8Array([0, 0, 0, 255]),
       );
 
+      // Load actual image
       const image = new Image();
       image.src = path;
       image.onload = () => {
@@ -195,6 +204,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       };
 
+      // Add to texture list with assigned unit
       this.textures.push({ texture, unit: this.nextTextureUnit });
       this.nextTextureUnit++;
     },
@@ -204,11 +214,15 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       gl.useProgram(this.program);
 
+      // Update uniforms
       const time = (performance.now() - startTime) * 0.001;
       gl.uniform1f(this.uTime, time);
       gl.uniform2f(this.uResolution, gl.canvas.width, gl.canvas.height);
       gl.uniform1f(this.uWind, weatherStore.windSpeed);
+      gl.uniform3f(this.uColor, cloudColor.value.r, cloudColor.value.g, cloudColor.value.b);
+      gl.uniform1f(this.uCloudClamp, cloudClamp.value);
 
+      // Update texture uniforms
       this.textures.forEach((t, i) => {
         gl.activeTexture(gl.TEXTURE0 + t.unit);
         gl.bindTexture(gl.TEXTURE_2D, t.texture);
@@ -255,9 +269,9 @@ async function setMapStyle() {
   const sunrise = data.sys.sunrise;
   const sunset = data.sys.sunset;
 
-  const isDay = now >= sunrise && now < sunset;
+  isDay.value = now >= sunrise && now < sunset;
 
-  weatherStore.setWeatherType(weatherMain, isDay);
+  weatherStore.setWeatherType(weatherMain, isDay.value);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
   weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
@@ -265,7 +279,7 @@ async function setMapStyle() {
   let currentStyle;
 
   // Map styles based on temperature ranges
-  if (!isDay) {
+  if (!isDay.value) {
     currentStyle = "night";
   } else if (data.main.temp <= 0) {
     currentStyle = "winter";
