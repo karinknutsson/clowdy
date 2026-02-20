@@ -9,6 +9,7 @@ import mapboxgl from "mapbox-gl";
 import { useSearchStore } from "src/stores/search-store";
 import { useMapStore } from "src/stores/map-store";
 import { useWeatherStore } from "src/stores/weather-store";
+import { useQuasar } from "quasar";
 import gsap from "gsap";
 
 import vertexShader from "src/shaders/vertex.glsl?raw";
@@ -32,11 +33,11 @@ import thunderstormFragmentShader from "src/shaders/thunderstorm/thunderstormFra
 import snowFragmentShader from "src/shaders/snow/snowFragment.glsl?raw";
 
 import { createProgram, createFullscreenQuad } from "src/utils/shader-helpers";
-import { set } from "@vueuse/core";
 
 const searchStore = useSearchStore();
 const mapStore = useMapStore();
 const weatherStore = useWeatherStore();
+const $q = useQuasar();
 
 let map;
 const apiKey = import.meta.env.VITE_MAPBOX_API_KEY;
@@ -433,17 +434,11 @@ watch(
 );
 
 watch(
-  () => searchStore.isSearchOpen,
+  () => searchStore.isSearchFocused,
   (isOpen) => {
     if ($q.screen.gt.sm) return;
 
-    if (isOpen) {
-      mapboxCtrlOpacity.value = 0;
-    } else {
-      setTimeout(() => {
-        mapboxCtrlOpacity.value = 1;
-      }, 300);
-    }
+    isOpen ? (mapboxCtrlOpacity.value = 0) : (mapboxCtrlOpacity.value = 1);
   },
 );
 </script>

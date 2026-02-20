@@ -12,6 +12,7 @@ export const useSearchStore = defineStore("searchStore", {
     loading: false,
     error: null,
     isSearchOpen: false,
+    isSearchFocused: false,
   }),
 
   actions: {

@@ -86,12 +86,12 @@ async function onOpenSearch() {
   if (searchStore.isSearchOpen) return;
 
   searchStore.isSearchOpen = true;
-  isSearchFocused.value = true;
+  searchStore.isSearchFocused = true;
 
   searchBarMarginBottom.value = "0";
 
   if ($q.screen.gt.sm) {
-    gsap.to(".search-suggestions", {
+    gsap.to(".search-bar", {
       width: searchBarFullWidth.value,
       duration: 0.3,
       ease: "power2.out",
@@ -107,26 +107,17 @@ async function onOpenSearch() {
 }
 
 function onBlurSearch() {
-  setTimeout(() => {
-    isSearchFocused.value = false;
-    searchBarMarginBottom.value = "32px";
-  }, 300);
+  searchStore.isSearchFocused = false;
+  searchBarMarginBottom.value = "32px";
 
   if (!searchTerm.value) {
     searchStore.isSearchOpen = false;
-    const width = $q.screen.lt.md ? "100%" : "196px";
 
-    gsap.to(".search-bar", {
-      duration: 0.3,
-      width,
-      ease: "power2.out",
-    });
-
-    if ($q.screen.lt.md) {
-      gsap.to(".search-input", {
-        padding: "0",
-        duration: 0.1,
-        delay: 0.2,
+    if ($q.screen.gt.sm) {
+      gsap.to(".search-bar", {
+        duration: 0.3,
+        width: "196px",
+        ease: "power2.out",
       });
     }
   }
