@@ -1,8 +1,8 @@
 {
-  "name": "clowdy",
+  "name": "nimbus",
   "version": "0.0.1",
   "description": "interactive map that changes appearance based on real-time weather",
-  "productName": "clowdy",
+  "productName": "nimbus",
   "author": "Karin Knutsson <karinmiriam@gmail.com>",
   "type": "module",
   "private": true,

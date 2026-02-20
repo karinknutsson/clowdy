@@ -187,7 +187,7 @@ export default defineConfig((/* ctx */) => {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "clowdy",
+        appId: "nimbus",
       },
     },
 

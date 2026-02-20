@@ -6,6 +6,7 @@ uniform vec2 uResolution;
 uniform float uTime;
 uniform float uWind;
 uniform sampler2D uTexture0;
+uniform vec3 uColor;
 
 out vec4 outColor;
 
@@ -26,6 +27,5 @@ void main() {
     float snowThirdLayer = createSnowLayer(sin(uTime * 5.0) * 0.008 - uTime * 0.01, uTime * 0.1, uv, 3.0);
 
     // Set color
-    vec3 color = vec3(1.0, 1.0, 1.0);
-    outColor = vec4(color, snowFirstLayer + snowSecondLayer + snowThirdLayer);
+    outColor = vec4(uColor, snowFirstLayer + snowSecondLayer + snowThirdLayer);
 }

@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import { onMounted, watch } from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import mapboxgl from "mapbox-gl";
 import { useSearchStore } from "src/stores/search-store";
 import { useMapStore } from "src/stores/map-store";
@@ -12,6 +12,7 @@ import { useWeatherStore } from "src/stores/weather-store";
 import gsap from "gsap";
 
 import vertexShader from "src/shaders/vertex.glsl?raw";
+import rotatingVertexShader from "src/shaders/rotatingVertex.glsl?raw";
 
 import fogFragmentShader from "src/shaders/atmosphere/fogFragment.glsl?raw";
 import mistFragmentShader from "src/shaders/atmosphere/mistFragment.glsl?raw";
@@ -43,6 +44,13 @@ let displayedStyle = null;
 let texturePaths = [];
 let startTime = performance.now();
 let lightningInterval = null;
+let isDay = ref(true);
+
+const cloudColor = computed(() =>
+  isDay.value ? { r: 1.0, g: 1.0, b: 1.0 } : { r: 0.29, g: 0.28, b: 0.3 },
+);
+
+const cloudClamp = computed(() => (isDay.value ? 0.8 : 1.0));
 
 function flash() {
   let delay = 0;
@@ -119,10 +127,10 @@ function flash() {
 }
 
 const mapStyles = {
-  placeholder: "mapbox://styles/karinmiriam/cml9i2zeb001801s88vlc747z?fresh=true",
+  night: "mapbox://styles/karinmiriam/cmlur55uh003o01sd830t990c?fresh=true",
   winter: "mapbox://styles/karinmiriam/cmls357u9000601qz21wtbivh?fresh=true",
   autumn: "mapbox://styles/karinmiriam/cml9fuw9f006c01sj5hqd6ytl?fresh=true",
-  spring: "mapbox://styles/karinmiriam/cml9h8dgz003f01r07i9h60bk?fresh=true",
+  spring: "mapbox://styles/karinmiriam/cmluqyq74000801sog67y0wrm?fresh=true",
   summer: "mapbox://styles/karinmiriam/cmlrol2w7001m01qo4vvwb0di?fresh=true",
   tropical: "mapbox://styles/karinmiriam/cml9hqmkw000t01s7frzh09k3?fresh=true",
   desert: "mapbox://styles/karinmiriam/cml9hvfca003j01r0d3jjcbkg?fresh=true",
@@ -149,29 +157,25 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
       if (!this.program) return;
 
       // Set attributes and uniforms
-      this.aPos = gl.getAttribLocation(this.program, "a_pos");
+      this.aPos = gl.getAttribLocation(this.program, "aPosition");
       this.uResolution = gl.getUniformLocation(this.program, "uResolution");
       this.uTime = gl.getUniformLocation(this.program, "uTime");
       this.uWind = gl.getUniformLocation(this.program, "uWind");
+      this.uColor = gl.getUniformLocation(this.program, "uColor");
+      this.uCloudClamp = gl.getUniformLocation(this.program, "uCloudClamp");
 
-      // Set texture uniforms if needed
-      if (texturePaths.length) {
-        for (let i = 0; i < texturePaths.length; i++) {
-          this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${i}`));
-        }
-      }
+      // Set texture uniforms and load textures if needed
+      texturePaths.forEach((path, index) => {
+        this.textureUniforms.push(gl.getUniformLocation(this.program, `uTexture${index}`));
+        this.addTexture(gl, path);
+      });
 
+      // Create fullscreen quad
       this.buffer = createFullscreenQuad(gl);
-
-      // Load textures if needed
-      if (texturePaths.length) {
-        texturePaths.forEach((path, index) => {
-          this.addTexture(gl, path);
-        });
-      }
     },
 
     addTexture(gl, path) {
+      // Create texture and bind it to a texture unit
       const texture = gl.createTexture();
       gl.bindTexture(gl.TEXTURE_2D, texture);
 
@@ -188,6 +192,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
         new Uint8Array([0, 0, 0, 255]),
       );
 
+      // Load actual image
       const image = new Image();
       image.src = path;
       image.onload = () => {
@@ -199,6 +204,7 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
       };
 
+      // Add to texture list with assigned unit
       this.textures.push({ texture, unit: this.nextTextureUnit });
       this.nextTextureUnit++;
     },
@@ -208,11 +214,15 @@ function addShaderLayer(layerId, vertexShader, fragmentShader) {
 
       gl.useProgram(this.program);
 
+      // Update uniforms
       const time = (performance.now() - startTime) * 0.001;
       gl.uniform1f(this.uTime, time);
       gl.uniform2f(this.uResolution, gl.canvas.width, gl.canvas.height);
       gl.uniform1f(this.uWind, weatherStore.windSpeed);
+      gl.uniform3f(this.uColor, cloudColor.value.r, cloudColor.value.g, cloudColor.value.b);
+      gl.uniform1f(this.uCloudClamp, cloudClamp.value);
 
+      // Update texture uniforms
       this.textures.forEach((t, i) => {
         gl.activeTexture(gl.TEXTURE0 + t.unit);
         gl.bindTexture(gl.TEXTURE_2D, t.texture);
@@ -255,16 +265,23 @@ async function setMapStyle() {
   const weatherMain = data.weather[0].main;
   const weatherDescription = data.weather[0].description;
 
-  weatherStore.setWeatherType(weatherMain);
+  const now = data.dt;
+  const sunrise = data.sys.sunrise;
+  const sunset = data.sys.sunset;
+
+  isDay.value = now >= sunrise && now < sunset;
+
+  weatherStore.setWeatherType(weatherMain, isDay.value);
   weatherStore.setAirTemp(Math.round(data.main.temp));
   weatherStore.setFeelsLike(Math.round(data.main.feels_like));
-  weatherStore.setLocation(data.name);
   weatherStore.setWindSpeed(Math.round(data.wind.speed * 3.6));
 
   let currentStyle;
 
   // Map styles based on temperature ranges
-  if (data.main.temp <= 0) {
+  if (!isDay.value) {
+    currentStyle = "night";
+  } else if (data.main.temp <= 0) {
     currentStyle = "winter";
   } else if (data.main.temp > 0 && data.main.temp <= 10) {
     currentStyle = "autumn";
@@ -300,24 +317,28 @@ async function setMapStyle() {
         break;
       case "Ash":
         texturePaths = ["./noise-textures/Perlin23-512x512.png"];
-        addShaderLayer("ashLayer", vertexShader, ashFragmentShader);
+        addShaderLayer("ashLayer", rotatingVertexShader, ashFragmentShader);
         break;
       case "Smoke":
         texturePaths = ["./noise-textures/SuperPerlin2-512x512.png"];
-        addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
+        addShaderLayer("smokeLayer", rotatingVertexShader, smokeFragmentShader);
         break;
 
       // Clouds
       case "Clouds":
         texturePaths = ["./noise-textures/Milky6-512x512.png"];
         if (weatherDescription.includes("overcast")) {
-          addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
+          addShaderLayer("overcastCloudsLayer", rotatingVertexShader, overcastCloudsFragmentShader);
         } else if (weatherDescription.includes("broken")) {
-          addShaderLayer("brokenCloudsLayer", vertexShader, brokenCloudsFragmentShader);
+          addShaderLayer("brokenCloudsLayer", rotatingVertexShader, brokenCloudsFragmentShader);
         } else if (weatherDescription.includes("scattered")) {
-          addShaderLayer("scatteredCloudsLayer", vertexShader, scatteredCloudsFragmentShader);
+          addShaderLayer(
+            "scatteredCloudsLayer",
+            rotatingVertexShader,
+            scatteredCloudsFragmentShader,
+          );
         } else {
-          addShaderLayer("fewCloudsLayer", vertexShader, fewCloudsFragmentShader);
+          addShaderLayer("fewCloudsLayer", rotatingVertexShader, fewCloudsFragmentShader);
         }
         break;
 
@@ -375,6 +396,14 @@ onMounted(async () => {
 
   await setMapStyle();
 
+  map.on("style.load", () => {
+    gsap.to("#map", {
+      opacity: 1,
+      duration: 1,
+      ease: "power4.out",
+    });
+  });
+
   map.on("moveend", async () => {
     mapStore.setCoordinates(map.getCenter().lng, map.getCenter().lat);
     mapStore.setZoom(map.getZoom());
@@ -409,6 +438,10 @@ watch(
   background: rgba(255, 255, 250);
   pointer-events: none;
   z-index: 19;
+  opacity: 0;
+}
+
+#map {
   opacity: 0;
 }
 

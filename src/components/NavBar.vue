@@ -6,7 +6,11 @@
           {{ weatherStore.weatherType ? weatherStore.weatherType : "&nbsp;" }}
         </div>
         <div class="weather-description-wrapper">
-          {{ weatherStore.airTemp ? "Air temp " + weatherStore.airTemp + "°" : "&nbsp;" }}
+          {{
+            weatherStore.airTemp || weatherStore.airTemp === "0"
+              ? "Air temp " + weatherStore.airTemp + "°"
+              : "&nbsp;"
+          }}
         </div>
         <div class="weather-description-wrapper">
           {{ weatherStore.windDescription ? weatherStore.windDescription + " wind" : "&nbsp;" }}

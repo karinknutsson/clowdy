@@ -48,7 +48,7 @@ export const useSearchStore = defineStore("searchStore", {
           language: "en",
           limit: "5",
           session_token: this.sessionToken,
-          types: "country,region,district,place,city,locality,neighborhood,poi",
+          types: "country,region,district,place,city,locality",
         });
 
         const res = await fetch(`${MAPBOX_SEARCHBOX_URL}?${params.toString()}`);

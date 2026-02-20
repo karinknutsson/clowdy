@@ -2,48 +2,24 @@
 
 precision mediump float;
 
-uniform vec2 uResolution;
-uniform float uTime;
-uniform float uWind;
 uniform sampler2D uTexture0;
+uniform vec3 uColor;
+uniform float uCloudClamp;
+
+in vec2 vRotatingUv;
 
 out vec4 outColor;
 
-vec2 rotateUv(vec2 uv, float angle, vec2 center) {
-    uv -= center;
-    float s = sin(angle);
-    float c = cos(angle);
-    uv = vec2(
-        uv.x * c - uv.y * s,
-        uv.x * s + uv.y * c
-    );
-    uv += center;
-    return uv;
-}
-
 void main() {
-    vec2 uv = gl_FragCoord.xy / uResolution;
-
-    // Set speed and rotation based on time and wind
-    vec2 speed = vec2(-0.002, -0.001);
-    speed *= uWind * 0.25;
-    float rotation = uTime * 0.003;
-    rotation *= uWind * 0.25;
-
-    // Create moving uv
-    vec2 movingUv = uv + speed * uTime;
-    movingUv = rotateUv(movingUv, rotation, vec2(0.5));
-
     // Cloud texture
-    float cloud = texture(uTexture0, movingUv).r;
+    float cloud = texture(uTexture0, vRotatingUv).r;
 
     // Invert cloud texture
     float invertedCloud = 1.0 - cloud;
     invertedCloud = smoothstep(0.3, 1.0, invertedCloud);
     invertedCloud = pow(invertedCloud, 2.0) * 1.5;
-    invertedCloud = clamp(invertedCloud, 0.0, 0.8);
+    invertedCloud = clamp(invertedCloud, 0.0, uCloudClamp);
 
     // Set color
-    vec3 color = vec3(1.0, 1.0, 1.0);
-    outColor = vec4(color, invertedCloud);
+    outColor = vec4(uColor, invertedCloud);
 }
