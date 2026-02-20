@@ -253,11 +253,8 @@ async function setMapStyle() {
 
   clearInterval(lightningInterval);
 
-  // const weatherMain = data.weather[0].main;
-  // const weatherDescription = data.weather[0].description;
-
-  const weatherMain = "Smoke";
-  const weatherDescription = "overcast clouds";
+  const weatherMain = data.weather[0].main;
+  const weatherDescription = data.weather[0].description;
 
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
@@ -383,6 +380,14 @@ onMounted(async () => {
 
   await setMapStyle();
 
+  map.on("style.load", () => {
+    gsap.to("#map", {
+      opacity: 1,
+      duration: 1,
+      ease: "power4.out",
+    });
+  });
+
   map.on("moveend", async () => {
     mapStore.setCoordinates(map.getCenter().lng, map.getCenter().lat);
     mapStore.setZoom(map.getZoom());
@@ -417,6 +422,10 @@ watch(
   background: rgba(255, 255, 250);
   pointer-events: none;
   z-index: 19;
+  opacity: 0;
+}
+
+#map {
   opacity: 0;
 }
 
