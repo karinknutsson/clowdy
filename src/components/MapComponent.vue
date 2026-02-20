@@ -56,13 +56,13 @@ const cloudColor = computed(() =>
 const cloudClamp = computed(() => (isDay.value ? 0.8 : 1.0));
 
 const mapStyles = {
-  night: "mapbox://styles/karinmiriam/cmlur55uh003o01sd830t990c?fresh=true",
-  winter: "mapbox://styles/karinmiriam/cmls357u9000601qz21wtbivh?fresh=true",
-  autumn: "mapbox://styles/karinmiriam/cml9fuw9f006c01sj5hqd6ytl?fresh=true",
-  spring: "mapbox://styles/karinmiriam/cmluqyq74000801sog67y0wrm?fresh=true",
-  summer: "mapbox://styles/karinmiriam/cmlrol2w7001m01qo4vvwb0di?fresh=true",
-  tropical: "mapbox://styles/karinmiriam/cml9hqmkw000t01s7frzh09k3?fresh=true",
-  desert: "mapbox://styles/karinmiriam/cml9hvfca003j01r0d3jjcbkg?fresh=true",
+  night: "mapbox://styles/karinmiriam/cmlur55uh003o01sd830t990c",
+  winter: "mapbox://styles/karinmiriam/cmls357u9000601qz21wtbivh",
+  autumn: "mapbox://styles/karinmiriam/cml9fuw9f006c01sj5hqd6ytl",
+  spring: "mapbox://styles/karinmiriam/cmluqyq74000801sog67y0wrm",
+  summer: "mapbox://styles/karinmiriam/cmlrol2w7001m01qo4vvwb0di",
+  tropical: "mapbox://styles/karinmiriam/cml9hqmkw000t01s7frzh09k3",
+  desert: "mapbox://styles/karinmiriam/cml9hvfca003j01r0d3jjcbkg",
 };
 
 function removeLayerIfExists(layerId) {
@@ -309,6 +309,7 @@ async function setMapStyle() {
     }
   }
 
+  // Only update style if it has changed to prevent unnecessary reloads
   if (currentStyle !== displayedStyle) {
     map.setStyle(mapStyles[currentStyle]);
     displayedStyle = currentStyle;
@@ -322,6 +323,7 @@ async function setMapStyle() {
 }
 
 onMounted(async () => {
+  // Initialize Mapbox map
   map = new mapboxgl.Map({
     container: "map",
     style: mapStyles.placeholder,
@@ -331,8 +333,10 @@ onMounted(async () => {
     accessToken: apiKey ?? "",
   });
 
+  // Set style and shader based on weather data
   await setMapStyle();
 
+  // Fade in map once style is loaded
   map.on("style.load", () => {
     gsap.to("#map", {
       opacity: 1,
@@ -341,6 +345,7 @@ onMounted(async () => {
     });
   });
 
+  // Update weather and map style on map move
   map.on("moveend", async () => {
     mapStore.setCoordinates(map.getCenter().lng, map.getCenter().lat);
     mapStore.setZoom(map.getZoom());
