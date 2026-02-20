@@ -4,7 +4,7 @@ precision mediump float;
 
 uniform sampler2D uTexture0;
 
-in vec2 vUv;
+in vec2 vRotatingUv;
 
 out vec4 outColor;
 
@@ -22,11 +22,11 @@ vec2 rotateUv(vec2 uv, float angle, vec2 center) {
 
 void main() {
     // Create flipped uv
-    vec2 vUvFlipped = rotateUv(vUv, 3.14159265, vec2(0.5));
+    vec2 vRotatingUvFlipped = rotateUv(vRotatingUv, 3.14159265, vec2(0.5));
 
     // Cloud textures
-    float cloud = texture(uTexture0, vUv).r;
-    float cloudFlipped = texture(uTexture0, vUvFlipped).r;
+    float cloud = texture(uTexture0, vRotatingUv).r;
+    float cloudFlipped = texture(uTexture0, vRotatingUvFlipped).r;
     float cloudCombined = cloud * cloudFlipped;
 
     // Invert cloud texture

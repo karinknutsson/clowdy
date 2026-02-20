@@ -6,6 +6,7 @@ uniform float uTime;
 uniform float uWind;
 
 out vec2 vUv;
+out vec2 vRotatingUv;
 
 vec2 rotateUv(vec2 uv, float angle, vec2 center) {
     uv -= center;
@@ -38,5 +39,6 @@ void main() {
     gl_Position = vec4(aPosition, 0.0, 1.0);
 
     // Varying
-    vUv = movingUv;
+    vUv = uv;
+    vRotatingUv = movingUv;
 }

@@ -257,7 +257,7 @@ async function setMapStyle() {
   // const weatherDescription = data.weather[0].description;
 
   const weatherMain = "Clouds";
-  const weatherDescription = "broken clouds";
+  const weatherDescription = "few clouds";
 
   weatherStore.setWeatherType(weatherMain);
   weatherStore.setAirTemp(Math.round(data.main.temp));
@@ -304,18 +304,18 @@ async function setMapStyle() {
         break;
       case "Ash":
         texturePaths = ["./noise-textures/Perlin23-512x512.png"];
-        addShaderLayer("ashLayer", vertexShader, ashFragmentShader);
+        addShaderLayer("ashLayer", rotatingVertexShader, ashFragmentShader);
         break;
       case "Smoke":
         texturePaths = ["./noise-textures/SuperPerlin2-512x512.png"];
-        addShaderLayer("smokeLayer", vertexShader, smokeFragmentShader);
+        addShaderLayer("smokeLayer", rotatingVertexShader, smokeFragmentShader);
         break;
 
       // Clouds
       case "Clouds":
         texturePaths = ["./noise-textures/Milky6-512x512.png"];
         if (weatherDescription.includes("overcast")) {
-          addShaderLayer("overcastCloudsLayer", vertexShader, overcastCloudsFragmentShader);
+          addShaderLayer("overcastCloudsLayer", rotatingVertexShader, overcastCloudsFragmentShader);
         } else if (weatherDescription.includes("broken")) {
           addShaderLayer("brokenCloudsLayer", rotatingVertexShader, brokenCloudsFragmentShader);
         } else if (weatherDescription.includes("scattered")) {
@@ -325,7 +325,7 @@ async function setMapStyle() {
             scatteredCloudsFragmentShader,
           );
         } else {
-          addShaderLayer("fewCloudsLayer", vertexShader, fewCloudsFragmentShader);
+          addShaderLayer("fewCloudsLayer", rotatingVertexShader, fewCloudsFragmentShader);
         }
         break;
 

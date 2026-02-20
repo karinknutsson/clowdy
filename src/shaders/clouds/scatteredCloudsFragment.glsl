@@ -4,13 +4,13 @@ precision mediump float;
 
 uniform sampler2D uTexture0;
 
-in vec2 vUv;
+in vec2 vRotatingUv;
 
 out vec4 outColor;
 
 void main() {
     // Cloud texture
-    float cloud = texture(uTexture0, vUv).r;
+    float cloud = texture(uTexture0, vRotatingUv).r;
 
     // Invert cloud texture
     float invertedCloud = 1.0 - cloud;
