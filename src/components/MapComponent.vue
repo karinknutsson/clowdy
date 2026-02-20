@@ -397,18 +397,21 @@ watch(
 }
 
 :deep(a) {
+  // color: $charcoal;
+  // text-decoration: none;
+  // font-size: 10px;
+
+  opacity: v-bind(mapboxCtrlOpacity);
+}
+
+:deep(.mapboxgl-ctrl.mapboxgl-ctrl-attrib) {
+  opacity: v-bind(mapboxCtrlOpacity);
   color: $charcoal;
-  text-decoration: none;
-  font-size: 10px;
-  opacity: v-bind(mapboxCtrlOpacity);
-}
-
-:deep(.mapboxgl-ctrl) {
-  opacity: v-bind(mapboxCtrlOpacity);
-}
-
-:deep(.mapboxgl-marker) {
-  pointer-events: none;
+  font-family: "Sofia Sans", sans-serif;
+  background: rgba(242, 243, 248, 0.67);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 2px;
 }
 
 .map-container {
