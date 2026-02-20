@@ -232,7 +232,7 @@ li {
   position: absolute;
   z-index: 5002;
   top: 96px;
-  left: 4vw;
+  left: 40px;
   width: v-bind(searchBarFullWidth);
 }
 
@@ -280,7 +280,7 @@ i {
 body.screen--sm,
 body.screen--xs {
   .search-bar {
-    width: 100%;
+    width: calc(100vw - 16px);
   }
 
   .search-suggestions {
