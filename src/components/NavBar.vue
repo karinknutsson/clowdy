@@ -7,7 +7,7 @@
         </div>
         <div class="weather-description-wrapper">
           {{
-            weatherStore.airTemp || weatherStore.airTemp === "0"
+            weatherStore.airTemp || weatherStore.airTemp === 0
               ? "Air temp " + weatherStore.airTemp + "°"
               : "&nbsp;"
           }}
