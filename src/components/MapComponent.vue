@@ -32,6 +32,7 @@ import thunderstormFragmentShader from "src/shaders/thunderstorm/thunderstormFra
 import snowFragmentShader from "src/shaders/snow/snowFragment.glsl?raw";
 
 import { createProgram, createFullscreenQuad } from "src/utils/shader-helpers";
+import { set } from "@vueuse/core";
 
 const searchStore = useSearchStore();
 const mapStore = useMapStore();
@@ -44,7 +45,8 @@ let displayedStyle = null;
 let texturePaths = [];
 let startTime = performance.now();
 let lightningInterval = null;
-let isDay = ref(true);
+const isDay = ref(true);
+const mapboxCtrlOpacity = ref(1);
 
 const cloudColor = computed(() =>
   isDay.value ? { r: 1.0, g: 1.0, b: 1.0 } : { r: 0.29, g: 0.28, b: 0.3 },
@@ -429,6 +431,21 @@ watch(
     }
   },
 );
+
+watch(
+  () => searchStore.isSearchOpen,
+  (isOpen) => {
+    if ($q.screen.gt.sm) return;
+
+    if (isOpen) {
+      mapboxCtrlOpacity.value = 0;
+    } else {
+      setTimeout(() => {
+        mapboxCtrlOpacity.value = 1;
+      }, 300);
+    }
+  },
+);
 </script>
 
 <style scoped lang="scss">
@@ -449,6 +466,11 @@ watch(
   color: $charcoal;
   text-decoration: none;
   font-size: 8px;
+  opacity: v-bind(mapboxCtrlOpacity);
+}
+
+:deep(.mapboxgl-ctrl) {
+  opacity: v-bind(mapboxCtrlOpacity);
 }
 
 :deep(.mapboxgl-marker) {

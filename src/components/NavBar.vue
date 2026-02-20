@@ -37,7 +37,8 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
+import gsap from "gsap";
 import SearchBar from "./SearchBar.vue";
 import { useWeatherStore } from "../stores/weather-store";
 
@@ -55,7 +56,7 @@ const showTempContainer = ref(true);
   width: 100vw;
   height: 100vh;
   height: 100dvh;
-  padding: 2% 4% 12% 4%;
+  padding: 2% 4% 4% 4%;
   display: flex;
   flex-direction: row-reverse;
   justify-content: space-between;

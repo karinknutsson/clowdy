@@ -59,6 +59,7 @@ const searchTerm = ref("");
 const isSearchFocused = ref(false);
 const searchBarRef = ref(null);
 const searchInputRef = ref(null);
+const searchBarMarginBottom = ref("32px");
 
 const emit = defineEmits(["showSearchSuggestions", "hideSearchSuggestions"]);
 
@@ -87,12 +88,16 @@ async function onOpenSearch() {
   searchStore.isSearchOpen = true;
   isSearchFocused.value = true;
 
-  gsap.to(".search-bar", {
-    duration: 0.3,
-    width: searchBarFullWidth.value,
-    ease: "power2.out",
-    delay: 0.2,
-  });
+  searchBarMarginBottom.value = "0";
+
+  if ($q.screen.gt.sm) {
+    gsap.to(".search-suggestions", {
+      width: searchBarFullWidth.value,
+      duration: 0.3,
+      ease: "power2.out",
+      delay: 0.2,
+    });
+  }
 
   await nextTick();
 
@@ -104,6 +109,7 @@ async function onOpenSearch() {
 function onBlurSearch() {
   setTimeout(() => {
     isSearchFocused.value = false;
+    searchBarMarginBottom.value = "32px";
   }, 300);
 
   if (!searchTerm.value) {
@@ -228,6 +234,7 @@ li {
   width: 196px;
   height: 56px;
   padding: 0 8px;
+  margin-bottom: v-bind(searchBarMarginBottom);
 }
 
 .search-form {
@@ -295,7 +302,7 @@ body.screen--xs {
 
   .search-suggestions {
     top: unset;
-    bottom: calc(12vw + 64px);
+    bottom: calc(12vw + 36px);
     width: 92vw;
   }
 }
