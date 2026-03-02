@@ -70,6 +70,7 @@ function clearSearchTerm() {
 }
 
 function onSelectSuggestion(suggestion) {
+  searchTerm.value = suggestion.name;
   searchStore.selectSuggestion(suggestion);
   searchStore.suggestions = [];
 }
