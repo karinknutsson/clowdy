@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch, nextTick } from "vue";
+import { ref, watch, nextTick } from "vue";
 import { useSearchStore } from "src/stores/search-store";
 import { areCoordinates } from "src/utils/is-coordinate";
 import { useQuasar } from "quasar";
@@ -60,6 +60,7 @@ const searchBarRef = ref(null);
 const searchInputRef = ref(null);
 const searchBarFullWidth = ref("420px");
 const searchBarMarginBottom = ref("32px");
+const isSelectingSuggestion = ref(false);
 
 const emit = defineEmits(["showSearchSuggestions", "hideSearchSuggestions"]);
 
@@ -70,9 +71,14 @@ function clearSearchTerm() {
 }
 
 function onSelectSuggestion(suggestion) {
+  isSelectingSuggestion.value = true;
   searchTerm.value = suggestion.name;
   searchStore.selectSuggestion(suggestion);
   searchStore.suggestions = [];
+
+  nextTick(() => {
+    isSelectingSuggestion.value = false;
+  });
 }
 
 async function onOpenSearch() {
@@ -121,7 +127,7 @@ onClickOutside(searchBarRef, () => {
 });
 
 watch(searchTerm, async (value) => {
-  if (!value) return;
+  if (!value || isSelectingSuggestion.value) return;
 
   searchStore.isSearchOpen = true;
 
